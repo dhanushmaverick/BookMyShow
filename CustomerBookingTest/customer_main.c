@@ -9,7 +9,7 @@ void initialize_user(User* user)
     strcpy(user->password_ ,"\0");
     user->isRegistered_ = false;
     for(int i = 0; i < MAX_TICKETS_; i++)
-    user->tickets_[i].isBooked = false;
+    user->tickets_[i].isBooked_ = false;
 }
 
 void initialize_user_reg(User* user, char* first_name, char* last_name, char* number, char* email, char* password)
@@ -26,21 +26,21 @@ void initialize_ticket(Ticket* ticket)
 {
     static int count = 1;
     ticket->ID_ = count++;
-    isBooked_ = false;
+    ticket->isBooked_ = false;
 }
 
 void initialize_seat(Seat* seat)
 {
     static int count = 1;
-    seat.number = count++;
-    seat.isEmpty_ = true;
+    seat->number_ = count++;
+    seat->isEmpty_ = true;
 }
 
-bool customer_main()
+bool customer_main(Booking_tickets* booking_tickets)
 {
     Seat seats_[MAX_SEATS_];
     for(int i = 0; i < MAX_SEATS_; i++)
-    initialize(&seats_[i]);
+    initialize_seat(&seats_[i]);
 
     User user;
     initialize_user(&user);
@@ -68,15 +68,15 @@ bool customer_main()
             register_user(&user);//register new user
             break;
             case 3:
-            list_movies();
+            list_movies(booking_tickets);
             break;
             case 4:
             book_tickets(&user);//Book tickets
             break;
             case 5:
             int i = 0;
-            while(user.ticket[i].isBooked == true)
-            view_ticket(&user.ticket[i++]);
+            while(user.tickets_[i].isBooked_ == true)
+            view_ticket(&user.tickets_[i++]);
             if(i == 0)
             printf("No tickets booked yet!\n");
             break;
@@ -98,9 +98,9 @@ bool customer_main()
 
 void view_ticket(Ticket* ticket)
 {
-    printf("Seat Number: %d\n", ticket->seat.number);
+    printf("Seat Number: %d\n", ticket->seat_.number_);
     printf("Movie Details: ");
-    print_movie(&(ticket->movie));
+    print_movie(&(ticket->movie_));
 }
 
 void login_user(User* user)
@@ -114,7 +114,7 @@ void register_user(User* user)
     //call initialize_user_reg
 }
 
-void book_tickets(User* user);
+void book_tickets(User* user)
 {
 
 }

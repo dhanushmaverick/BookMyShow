@@ -2,6 +2,7 @@
 #define CUSTOMER_MAIN__C
 
 #include "admin_main.h"
+#include <stdbool.h>
 #include <string.h>
 
 #define MAX_SEATS_ 50
@@ -34,7 +35,7 @@ void initialize_user(User* user);
 void initialize_ticket(Ticket* ticket);
 void initialize_seat(Seat* seat);
 
-bool customer_main();
+bool customer_main(Booking_tickets*);
     void login_user(User* user);//Login user
     void register_user(User* user);//Register user
     //View available movies
