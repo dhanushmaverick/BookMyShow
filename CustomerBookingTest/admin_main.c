@@ -1,5 +1,56 @@
 
-#include "main.h"
+
+#include "admin_main.h"
+
+
+void valid_price(Booking_tickets *Book, int index) 
+{
+    char buffer[100];
+    int valid;
+
+    while (1) 
+    {
+        printf("Enter the Movie Price: ");
+        scanf(" %[^\n]", buffer); // Read entire line as string
+
+        valid = 1;
+        int dot_count = 0;
+
+        for (int i = 0; buffer[i] != '\0'; i++) 
+        {
+            if (buffer[i] == '.') 
+            {
+                dot_count++;
+                if (dot_count > 1) 
+                {
+                    valid = 0; // More than one decimal
+                    break;
+                }
+            }
+            else if (!isdigit((unsigned char)buffer[i])) 
+            {
+                valid = 0; // Non-digit character found
+                break;
+            }
+        }
+
+        if (valid) {
+            double value = atof(buffer);
+            if (value > 0) 
+            {
+                Book->booking_movie[index].price = value;
+                break; // Exit after valid input
+            } else 
+            {
+                printf("Price must be greater than 0.\n");
+            }
+        } 
+        else 
+        {
+            printf("Invalid input. Please enter only numbers.\n");
+        }
+    }
+}
 
 void create_movie(Booking_tickets *Book)//create movie function decleration
 {
@@ -10,13 +61,11 @@ void create_movie(Booking_tickets *Book)//create movie function decleration
     printf("Enter the Movie Time:");
     scanf(" %[^\n]",Book->booking_movie[size].movie_time);
 
-    printf("Enter the Movie Price:");
-    scanf(" %lf",&Book->booking_movie[size].price);
+    valid_price(Book, size);
     
     Book->movies_count++;
 
 }
-
 
 void edit_movie(Booking_tickets *book)
 {
@@ -25,14 +74,62 @@ void edit_movie(Booking_tickets *book)
 }
 
 
-void delete_movie(Booking_tickets *book)
+void delete_movie(Booking_tickets *Book)
 {
+    char str[50];
+    //int option;
+    int same_movie[30];
+    //printf("Delete Movie by:\n1. Movie_name\nEnter option: ");
+    //scanf("%d", &option);
 
-
+    printf("Enter the Movie: ");
+    getchar();//reading the input from the user
+    scanf("%[^\n]", str);
+    int k=0;
+    for (int i = 0; i < Book->movies_count; i++)
+    {
+        if(strcmp(Book->booking_movie[i].movie_name, str) == 0)
+        {
+            same_movie[k++] = i;//increasing the k value
+        }
+    }
+    if(k == 0)
+    {
+        printf("No matching Movie found\n");//if the k value is zero then prints the below statement
+    }
+    else
+    {
+        //if the k value is not zero then prints the booking_movie 
+        printf("Found %d matching movies:\n", k);
+        for (int i = 0; i < k; i++) 
+        {
+            int j = same_movie[i];
+            printf("Movie S.No %d\n", i+1);
+            printf("Movie_name: %s\n", Book->booking_movie[j].movie_name);
+            printf("Movie_time: %s\n", Book->booking_movie[j].movie_time);
+            printf("Price: %lf\n", Book->booking_movie[j].price);
+            printf("\n");
+        }
+    }
+    int c;
+    printf("Enter your Movie choice to delete: ");
+    scanf("%d", &c);//giving the promt to select which contact to delete
+    if (c < 1 || c > k) 
+    {
+        printf("Invalid choice.\n");//if the movie choice is not listed then printing invalid
+    }
+    int index = same_movie[c - 1];
+    
+    for (int i = index; i < Book->movies_count - 1; i++) 
+    {
+        Book->booking_movie[i] = Book->booking_movie[i + 1];
+    }
+    Book->movies_count--;//decreasing the movie count
+    printf("Movie deleted successfully.\n");
 }
 
 
-void list_movie(Booking_tickets * book)
+void list_movies(Booking_tickets * book)
 {
     if (book->movies_count == 0)
     {
@@ -54,6 +151,14 @@ void list_movie(Booking_tickets * book)
         }
         printf("-----------------------------------------------------------------\n");
     }
+}
+
+void print_movie(Movies* movie)
+{
+    printf("Movie_name: %s\n", movie->movie_name);
+    printf("Movie_time: %s\n", movie->movie_time);
+    printf("Price: %lf\n", movie->price);
+    printf("\n");
 }
 
 void save_movie(Booking_tickets * Book)
@@ -104,3 +209,5 @@ void load_from_file(Booking_tickets *Book)//load movies to file function definit
     fclose(fptr);//closing the file
     printf("Movies loaded from file successfully\n");
 }
+
+
