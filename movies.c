@@ -10,7 +10,8 @@ void create_movie(Booking_tickets *Book)//create movie function decleration
     scanf(" %[^\n]",Book->booking_movie->movie_time);
 
     printf("Enter the Movie Price:");
-    scanf(" %[^\n]",&Book->booking_movie->price);
+    scanf(" %lf",&Book->booking_movie->price);
+    
     Book->movies_count++;
 
 }
@@ -45,7 +46,7 @@ void list_movie(Booking_tickets * book)
             printf("Movie: %d:\n", i + 1);
             printf("Movie: %s\n", book->booking_movie[i].movie_name);
             printf("Time: %s\n", book->booking_movie[i].movie_time);
-            printf("Price: %d\n", book->booking_movie[i].price);
+            printf("Price: %lf\n", book->booking_movie[i].price);
             printf("\n");
         }
     }
