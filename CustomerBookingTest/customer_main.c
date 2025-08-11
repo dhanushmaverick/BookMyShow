@@ -83,8 +83,10 @@ bool customer_main()
             case 6:
             printf("Thank you for using BookMyShow!\n");
             printf("Goodbye and see you again!\n"); 
-            return 0
+            return 0;
             break;
+            case 7:
+            return 1; // secret input, for admins to access admin view
             default:
             printf("Invalid choice. Please try again.\n");
         }
