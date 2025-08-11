@@ -42,9 +42,9 @@ void list_movie(Booking_tickets * book)
         {
             printf("--------------------Movie List-------------------");
             printf("Movie: %d:\n", i + 1);
-            printf("Movie: %s\n", book->movies[i].);
-            printf("Time: %s\n", book->movies[i].phone);
-            printf("Price: %s\n", book->movies[i].email);
+            printf("Movie: %s\n", book->booking_movie[i].movie_name);
+            printf("Time: %s\n", book->booking_movie[i].movie_time);
+            printf("Price: %s\n", book->booking_movie[i].price);
             printf("\n");
         }
     }
