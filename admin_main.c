@@ -2,6 +2,51 @@
 
 #include "admin_main.h"
 
+bool admin(Booking_tickets *Book)
+{
+    int choice;
+    do
+    {
+        printf("\n----------Admin Menu----------\n");
+        printf("1. Create Movie\n");
+        printf("2. Edit Movie\n");
+        printf("3. Delete Movie\n");
+        printf("4. List all Movies\n");
+        printf("5. Exit to Customer Version\n"); //return false
+        printf("6. Exit Program\n"); //return true
+        printf("Enter your choice: ");//entering the choice
+        scanf("%d", &choice);//reading the choice from the user
+
+        switch (choice) {
+            case 1:
+            create_movie(Book);
+            printf("\n");
+            break;
+            case 2:
+            edit_movie(Book);//edit
+            printf("\n");
+            break;
+            case 3:
+            delete_movie(Book);//delete movie
+            printf("\n");
+            break;
+            case 4:
+            list_movies(Book);//list movies
+            printf("\n");
+            break;
+            case 5:
+            return 1;
+            break;
+            case 6:
+            printf("Saving and Exiting...\n");
+            printf("Exit Successful.\n");
+            save_movie(Book);
+            default:
+            printf("Invalid choice. Please try again.\n");
+        }
+    } 
+    while (choice != 6);
+}
 
 void valid_price(Booking_tickets *Book, int index) 
 {
@@ -34,7 +79,8 @@ void valid_price(Booking_tickets *Book, int index)
             }
         }
 
-        if (valid) {
+        if (valid) 
+        {
             double value = atof(buffer);
             if (value > 0) 
             {

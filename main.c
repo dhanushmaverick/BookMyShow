@@ -2,59 +2,60 @@
 to display the intilal menu*/
 
 #include "admin_main.h"
-
+#include "customer_main.h"
 int main()
 {
-    int choice;
+    
     Booking_tickets booking_tickets;
     //booking_tickets.movies_count = 0;
     printf("in main\n");
-    initialize(&booking_tickets); // Initializing the file to load
-    // for(int i = 0; i < MAX_MOVIES; i++)
-    // {
-    //     booking_tickets.booking_movie[i].price = 0.0;
-    // }
-    printf("At intilize\n");
+    initialize(&booking_tickets); // Initializing the file to load at the start
     //bool admin_main() ->
-    //bool customer_main() //secret input value 
-    do
+    bool status = false;
+    int choice;
+    printf("---------------Main Menu---------------\n");
+    printf("1.Admin\n2.Customer\n3.Exit\nEnter your Choice: ");
+    scanf("%d", &choice);
+    switch(choice) 
     {
-        printf("\n----------Admin Menu----------\n");
-        printf("1. Create Movie\n");
-        printf("2. Edit Movie\n");
-        printf("3. Delete Movie\n");
-        printf("4. List all Movies\n");
-        printf("5. Exit Program\n"); //return false
-        printf("6. Exit to Customer Version\n"); //return true
-        printf("Enter your choice: ");//entering the choice
-        scanf("%d", &choice);//reading the choice from the user
+        case 1:
+        printf("You Accessed As Admin\n");
+        do
+        {
+            status = admin(&booking_tickets);
+            if(status != 1)
+            return 0;
+            else
+            status = customer_main(&booking_tickets);
+            if(!status)
+            return 0;
+        } while (status != 1);
+        break;
 
-        switch (choice) {
-            case 1:
-            create_movie(&booking_tickets);
-            printf("\n");
-            break;
-            case 2:
-            edit_movie(&booking_tickets);//edit
-            printf("\n");
-            break;
-            case 3:
-            delete_movie(&booking_tickets);//delete movie
-            printf("\n");
-            break;
-            case 4:
-            list_movies(&booking_tickets);//list movies
-            printf("\n");
-            break;
-            case 5:
-            printf("Saving and Exiting...\n");
-            printf("Exit Successful.\n");
-            save_movie(&booking_tickets);
-            break;
-            default:
-            printf("Invalid choice. Please try again.\n");
-        }
-    } 
-    while (choice != 5);
+        case 2:
+        do
+        {
+            status = customer_main(&booking_tickets);
+            if(status != 1)
+            return 0;
+            else
+            status = admin(&booking_tickets);
+            if(!status)
+            return 0;
+        } while (status != 1);
+        break;
+        break;
+        case 3: 
+        exit(EXIT_SUCCESS);
+        break;
+        default:
+        printf("Invalid choice. Please try again.\n");
+
+    }
+
+    
+    
+    //bool customer_main() //secret input value 
+    
     return 0;
 }

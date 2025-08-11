@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <ctype.h>
 
 
@@ -41,5 +42,7 @@ void save_movie_file(Booking_tickets *Book);//save to file
 void load_from_file(Booking_tickets *Book);//load movies to file 
 void initialize(Booking_tickets *Book); //intilizing the file to load from the file
 void valid_price(Booking_tickets *Book, int index);
+bool admin(Booking_tickets *Book);
+// bool customer(Booking_tickets *Book);
 
 #endif
