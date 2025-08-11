@@ -27,8 +27,8 @@ void delete_movie(Booking_tickets *Book);
 void list_movie(Booking_tickets * Book);
 void save_movie(Booking_tickets * Book);
 void save_movie_file(Booking_tickets *Book);//save to file
-void load_from_file(Booking_tickets *Book);//load contacts to file function definition 
-void initialize(Booking_tickets * Book); 
+void load_from_file(Booking_tickets *Book);//load movies to file 
+void initialize(Booking_tickets *Book); 
 
 
 #endif

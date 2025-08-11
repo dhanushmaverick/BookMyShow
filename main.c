@@ -7,12 +7,15 @@ int main()
 {
     int choice;
     Booking_tickets booking_tickets;
-    booking_tickets.movies_count = 0;
+    //booking_tickets.movies_count = 0;
+    printf("in main\n");
     initialize(&booking_tickets); // Initializing the file to load
     // for(int i = 0; i < MAX_MOVIES; i++)
     // {
     //     booking_tickets.booking_movie[i].price = 0.0;
     // }
+    printf("At intilize\n");
+    
     do
     {
         printf("\n----------Book Menu----------\n");

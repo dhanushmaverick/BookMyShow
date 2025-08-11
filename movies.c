@@ -40,8 +40,8 @@ void list_movie(Booking_tickets * book)
     } 
     else 
     {
-            printf("--------------------Movie List-------------------\n");
-        //if movie count is not zero then it prints the name,phone number and email of the movies
+         printf("--------------------Movie List-------------------\n");
+        //if movie count is not zero then it prints movies
         for (int i = 0; i < book->movies_count; i++) 
         {
             printf("Movie: %d:\n", i + 1);
@@ -76,28 +76,28 @@ void save_movie_file(Booking_tickets *Book) //save to file definition
     fprintf(fptr,"#%d\n", Book->movies_count);//printing the number of movies in address book
     for (int i = 0; i < Book->movies_count ;i++) 
     {
-        //printing the name,phone number and mail in the file 
+        //printing  in the file 
         fprintf(fptr, "%s,%s,%lf\n", Book->booking_movie[i].movie_name,Book->booking_movie[i].movie_time,Book->booking_movie[i].price);
     }
     fclose(fptr);//closing the file
     printf("movies saved to file successfully\n");//printing the statment that movies are saved to file successfully
 }
 
-void load_from_file(Booking_tickets *Book)//load contacts to file function definition 
+void load_from_file(Booking_tickets *Book)//load movies to file function definition 
 {
     FILE* fptr = fopen("movies.csv","r");//opening the file in read format
     if (!fptr) 
     {
         printf("Error opening file for reading\n");//printing error opening if file doesn't opened
     }
-    fscanf(fptr,"#%d\n",Book->movies_count);//reading the number of contacts in address book
+    fscanf(fptr,"#%d\n",&Book->movies_count);
     for (int i = 0; i < Book->movies_count; i++) 
     {
-        //reading the name,phone number and email from the file
+
         fscanf(fptr, "%[^,],",Book->booking_movie[i].movie_name);
         fscanf(fptr, "%[^,],", Book->booking_movie[i].movie_time);
-        fscanf(fptr, "%[^\n]\n", Book->booking_movie[i].price);
+        fscanf(fptr, "%lf\n", &Book->booking_movie[i].price);
     }
     fclose(fptr);//closing the file
-    printf("Movies loaded from file successfully\n");//printing the statement that contacts loaded from file successfully
+    printf("Movies loaded from file successfully\n");
 }
