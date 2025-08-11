@@ -3,14 +3,15 @@
 
 void create_movie(Booking_tickets *Book)//create movie function decleration
 {
+    int size = Book->movies_count;
     printf("Enter the Movie Name:");
-    scanf(" %[^\n]",Book->booking_movie->movie_name);
+    scanf(" %[^\n]",Book->booking_movie[size].movie_name);
 
     printf("Enter the Movie Time:");
-    scanf(" %[^\n]",Book->booking_movie->movie_time);
+    scanf(" %[^\n]",Book->booking_movie[size].movie_time);
 
     printf("Enter the Movie Price:");
-    scanf(" %lf",&Book->booking_movie->price);
+    scanf(" %lf",&Book->booking_movie[size].price);
     
     Book->movies_count++;
 
@@ -39,10 +40,10 @@ void list_movie(Booking_tickets * book)
     } 
     else 
     {
+            printf("--------------------Movie List-------------------\n");
         //if movie count is not zero then it prints the name,phone number and email of the movies
         for (int i = 0; i < book->movies_count; i++) 
         {
-            printf("--------------------Movie List-------------------\n");
             printf("Movie: %d:\n", i + 1);
             printf("Movie: %s\n", book->booking_movie[i].movie_name);
             printf("Time: %s\n", book->booking_movie[i].movie_time);
@@ -69,7 +70,7 @@ void save_movie_file(Booking_tickets *book) //save to file definition
     for (int i = 0; i < book->movies_count ;i++) 
     {
         //printing the name,phone number and mail in the file 
-        fprintf(fptr, "%s,%s,%d\n", book->booking_movie[i].movie_name,book->booking_movie[i].movie_time,book->booking_movie[i].price);
+        fprintf(fptr, "%s,%s,%lf\n", book->booking_movie[i].movie_name,book->booking_movie[i].movie_time,book->booking_movie[i].price);
     }
     fclose(fptr);//closing the file
     printf("movies saved to file successfully\n");//printing the statment that movies are saved to file successfully
