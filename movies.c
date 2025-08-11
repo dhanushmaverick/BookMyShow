@@ -53,26 +53,51 @@ void list_movie(Booking_tickets * book)
     }
 }
 
-void save_movie(Booking_tickets * book)
+void save_movie(Booking_tickets * Book)
 {
-    save_movie_file(book); // Save movies to file
+    save_movie_file(Book); // Save movies to file
     exit(EXIT_SUCCESS); // Exit the program
 }
 
-void save_movie_file(Booking_tickets *book) //save to file definition
+void initialize(Booking_tickets * Book) 
+{
+    Book->movies_count = 0;
+    //Load movies from file during initialization (After files)
+    load_from_file(Book);
+}
+
+void save_movie_file(Booking_tickets *Book) //save to file definition
 {
     FILE* fptr = fopen("movies.csv","w+");//opening the file
     if (!fptr) 
     {
         printf("Error opening file for writing\n");//printing the error if the file is not opened
     }
-    fprintf(fptr,"#%d\n", book->movies_count);//printing the number of movies in address book
-    for (int i = 0; i < book->movies_count ;i++) 
+    fprintf(fptr,"#%d\n", Book->movies_count);//printing the number of movies in address book
+    for (int i = 0; i < Book->movies_count ;i++) 
     {
         //printing the name,phone number and mail in the file 
-        fprintf(fptr, "%s,%s,%lf\n", book->booking_movie[i].movie_name,book->booking_movie[i].movie_time,book->booking_movie[i].price);
+        fprintf(fptr, "%s,%s,%lf\n", Book->booking_movie[i].movie_name,Book->booking_movie[i].movie_time,Book->booking_movie[i].price);
     }
     fclose(fptr);//closing the file
     printf("movies saved to file successfully\n");//printing the statment that movies are saved to file successfully
 }
 
+void load_from_file(Booking_tickets *Book)//load contacts to file function definition 
+{
+    FILE* fptr = fopen("movies.csv","r");//opening the file in read format
+    if (!fptr) 
+    {
+        printf("Error opening file for reading\n");//printing error opening if file doesn't opened
+    }
+    fscanf(fptr,"#%d\n",Book->movies_count);//reading the number of contacts in address book
+    for (int i = 0; i < Book->movies_count; i++) 
+    {
+        //reading the name,phone number and email from the file
+        fscanf(fptr, "%[^,],",Book->booking_movie[i].movie_name);
+        fscanf(fptr, "%[^,],", Book->booking_movie[i].movie_time);
+        fscanf(fptr, "%[^\n]\n", Book->booking_movie[i].price);
+    }
+    fclose(fptr);//closing the file
+    printf("Movies loaded from file successfully\n");//printing the statement that contacts loaded from file successfully
+}

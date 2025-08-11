@@ -12,11 +12,10 @@ typedef struct {
     char movie_name[50];
     char movie_time[5];
     double price;
-
-} Booking;
+} Movies;
 
 typedef struct {
-    Booking booking_movie[MAX_MOVIES];
+    Movies booking_movie[MAX_MOVIES];
     int movies_count;
 } Booking_tickets;
 
@@ -27,7 +26,9 @@ void edit_movie(Booking_tickets *Book);
 void delete_movie(Booking_tickets *Book);
 void list_movie(Booking_tickets * Book);
 void save_movie(Booking_tickets * Book);
-void save_movie_file(Booking_tickets *book);//save to file
+void save_movie_file(Booking_tickets *Book);//save to file
+void load_from_file(Booking_tickets *Book);//load contacts to file function definition 
+void initialize(Booking_tickets * Book); 
 
 
 #endif
