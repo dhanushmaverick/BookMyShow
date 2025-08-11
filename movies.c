@@ -11,6 +11,7 @@ void create_movie(Booking_tickets *Book)//create movie function decleration
 
     printf("Enter the Movie Price:");
     scanf(" %[^\n]",&Book->booking_movie->price);
+    Book->movies_count++;
 
 }
 
@@ -40,11 +41,11 @@ void list_movie(Booking_tickets * book)
         //if movie count is not zero then it prints the name,phone number and email of the movies
         for (int i = 0; i < book->movies_count; i++) 
         {
-            printf("--------------------Movie List-------------------");
+            printf("--------------------Movie List-------------------\n");
             printf("Movie: %d:\n", i + 1);
             printf("Movie: %s\n", book->booking_movie[i].movie_name);
             printf("Time: %s\n", book->booking_movie[i].movie_time);
-            printf("Price: %s\n", book->booking_movie[i].price);
+            printf("Price: %d\n", book->booking_movie[i].price);
             printf("\n");
         }
     }

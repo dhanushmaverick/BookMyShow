@@ -11,7 +11,7 @@
 typedef struct {
     char movie_name[50];
     char movie_time[5];
-    char price;
+    double price;
 
 } Booking;
 

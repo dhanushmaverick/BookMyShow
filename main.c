@@ -7,6 +7,11 @@ int main()
 {
     int choice;
     Booking_tickets booking_tickets;
+    booking_tickets.movies_count = 0;
+    // for(int i = 0; i < MAX_MOVIES; i++)
+    // {
+    //     booking_tickets.booking_movie[i].price = 0.0;
+    // }
     do
     {
         printf("\n----------Book Menu----------\n");
