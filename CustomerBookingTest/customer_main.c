@@ -71,7 +71,7 @@ bool customer_main(Booking_tickets* booking_tickets)
             list_movies(booking_tickets);
             break;
             case 4:
-            book_tickets(&user);//Book tickets
+            book_tickets(&user,booking_tickets);//Book tickets
             break;
             case 5:
             int i = 0;
@@ -116,5 +116,5 @@ void register_user(User* user)
 
 void book_tickets(User* user, Booking_tickets* booking_tickets)
 {
-    list_movies(booking_tickets)
+    list_movies(booking_tickets);
 }
