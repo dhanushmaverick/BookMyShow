@@ -1,7 +1,7 @@
 /* main data display
 to display the intilal menu*/
 
-#include "main.h"
+#include "admin_main.h"
 
 int main()
 {
@@ -32,15 +32,19 @@ int main()
         switch (choice) {
             case 1:
             create_movie(&booking_tickets);
+            printf("\n");
             break;
             case 2:
             edit_movie(&booking_tickets);//edit
+            printf("\n");
             break;
             case 3:
             delete_movie(&booking_tickets);//delete movie
+            printf("\n");
             break;
             case 4:
-            list_movie(&booking_tickets);//list movies
+            list_movies(&booking_tickets);//list movies
+            printf("\n");
             break;
             case 5:
             printf("Saving and Exiting...\n");
