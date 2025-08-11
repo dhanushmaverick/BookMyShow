@@ -15,8 +15,8 @@ int main()
     //     booking_tickets.booking_movie[i].price = 0.0;
     // }
     printf("At intilize\n");
-    //bool admin_main() ->
-    //bool customer_main() //secret input value 
+    //bool adminMain() ->
+    //bool customerMain() //secret input value 
     do
     {
         printf("\n----------Admin Menu----------\n");
