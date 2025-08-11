@@ -10,11 +10,6 @@
 
 
 typedef struct{
-    int number_;
-    bool isEmpty_;
-}Seat;
-
-typedef struct{
     Seat seat_;
     int ID_;
     bool isBooked_;
@@ -39,7 +34,7 @@ bool customer_main(Booking_tickets*);
     void login_user(User* user);//Login user
     void register_user(User* user);//Register user
     //View available movies
-    void book_tickets(User* user);//Book tickets
+    void book_tickets(User* user, Booking_tickets* booking_tickets);//Book tickets
         // void view_seats();//View seats
         // void select_seats();//Select seats
         // void pay_for_seats();//Pay for seats

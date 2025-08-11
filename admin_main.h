@@ -8,6 +8,12 @@
 #include <stdlib.h>
 #include <ctype.h>
 
+
+typedef struct{
+    int number_;
+    bool isEmpty_;
+}Seat;
+
 //structure decleration 
 typedef struct {
     char movie_name[50];
@@ -18,6 +24,9 @@ typedef struct {
 typedef struct {
     Movies booking_movie[MAX_MOVIES];
     int movies_count;
+    Seat seats_[MAX_SEATS_];
+    for(int i = 0; i < MAX_SEATS_; i++)
+    initialize_seat(&seats_[i]);
 } Booking_tickets;
 
 
