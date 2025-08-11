@@ -35,9 +35,9 @@ bool customer_main(Booking_tickets*);
     void register_user(User* user);//Register user
     //View available movies
     void book_tickets(User* user, Booking_tickets* booking_tickets);//Book tickets
-        // void view_seats();//View seats
-        // void select_seats();//Select seats
-        // void pay_for_seats();//Pay for seats
+        void view_seats(Movies* movie);//View seats
+        void select_seats(User* user, Movies* movie);//Select seats
+        void pay_for_seats(User* user);//Pay for seats
     void view_ticket(Ticket* ticket);//View ticket
     //Exit program
 
