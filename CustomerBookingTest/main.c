@@ -48,7 +48,7 @@ int main()
             break;
             case 5:
             printf("Saving and Exiting...\n");
-            printf("You Got exited\n");
+            printf("Exit Successful.\n");
             save_movie(&booking_tickets);
             break;
             default:

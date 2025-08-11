@@ -114,7 +114,7 @@ void register_user(User* user)
     //call initialize_user_reg
 }
 
-void book_tickets(User* user)
+void book_tickets(User* user, Booking_tickets* booking_tickets)
 {
-
+    list_movies(booking_tickets)
 }
