@@ -38,9 +38,6 @@ void initialize_seat(Seat* seat)
 
 bool customer_main(Booking_tickets* booking_tickets)
 {
-    Seat seats_[MAX_SEATS_];
-    for(int i = 0; i < MAX_SEATS_; i++)
-    initialize_seat(&seats_[i]);
 
     User user;
     initialize_user(&user);
@@ -71,7 +68,7 @@ bool customer_main(Booking_tickets* booking_tickets)
             list_movies(booking_tickets);
             break;
             case 4:
-            book_tickets(&user,booking_tickets);//Book tickets
+            book_tickets(&user, booking_tickets);//Book tickets
             break;
             case 5:
             int i = 0;
@@ -99,7 +96,7 @@ bool customer_main(Booking_tickets* booking_tickets)
 void view_ticket(Ticket* ticket)
 {
     printf("Seat Number: %d\n", ticket->seat_.number_);
-    printf("Movie Details: ");
+    printf("Movie Details: \n");
     print_movie(&(ticket->movie_));
 }
 
@@ -116,5 +113,52 @@ void register_user(User* user)
 
 void book_tickets(User* user, Booking_tickets* booking_tickets)
 {
-    list_movies(booking_tickets);
+    bool booked = false;
+    do
+    {
+        printf("Please select a Movie from the list below: \n");
+        list_movies(booking_tickets);
+        int movie_number = 0;
+        int result;
+        char ch;
+        do {
+            printf("Movie Number: ");
+            result = scanf("%d", &movie_number);
+            if (result != 1 && movie_number <= booking_tickets.movie_count && movie_number > 0) {
+                printf("Invalid input. Please enter a valid movie number.\n");
+                // Clear input buffer
+                while ((ch = getchar()) != '\n' && ch != EOF);
+            }
+            int option = 0;
+            printf("Options:\n")
+            printf("1. View Seats\n");
+            printf("2. Select/change Seats\n");
+            printf("3. Proceed to payment\n");
+            printf("4. Select different movie\n");
+            printf("5. Return to Main menu\n");
+            printf("Input: ");
+            scanf("%d", &option)
+            switch(option)
+            {
+                case(1):
+                view_seats(booking_tickets.booking_movie[result-1]);
+                break;
+                case(2):
+                select_seats(&user,booking_tickets.booking_movie[result-1]);
+                break;
+                case(3):
+                pay_for_seats(&user);
+                break;
+                case(4):
+                break;
+                case(5):
+                booked = true;
+                return;
+                default:
+                printf("Invalid input. Please enter a valid choice.\n");
+                break;
+            }
+        } while (result != 1);
+    }
+    while(!booked);
 }
