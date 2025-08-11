@@ -40,16 +40,19 @@ void list_movie(Booking_tickets * book)
     } 
     else 
     {
-         printf("--------------------Movie List-------------------\n");
+        printf("----------------------------Movie List---------------------------\n");
         //if movie count is not zero then it prints movies
+        printf("%-5s %-30s %-15s %-10s\n", "S.No", "Movie Name", "Time", "Price");
+        printf("-----------------------------------------------------------------\n");
         for (int i = 0; i < book->movies_count; i++) 
         {
-            printf("Movie: %d:\n", i + 1);
-            printf("Movie: %s\n", book->booking_movie[i].movie_name);
-            printf("Time: %s\n", book->booking_movie[i].movie_time);
-            printf("Price: %lf\n", book->booking_movie[i].price);
+            printf("%-5d", i + 1);
+            printf(" %-30s", book->booking_movie[i].movie_name);
+            printf(" %-15s", book->booking_movie[i].movie_time);
+            printf(" %-10.3lf", book->booking_movie[i].price);
             printf("\n");
         }
+        printf("-----------------------------------------------------------------\n");
     }
 }
 
