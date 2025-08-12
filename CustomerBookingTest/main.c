@@ -14,7 +14,6 @@ int main()
     //booking_tickets.movies_count = 0;
     initialize(&booking_tickets); // Initializing the file to load at the start
     //initialize_users_start(&users);
-    init_user_details(&ud);//put this  to admin
     
     bool status = false;
     int choice;
@@ -57,8 +56,6 @@ int main()
         printf("Invalid choice. Please try again.\n");
 
     }
-    free(ud.user_details);
-
-    //bool customer_main() //secret input value 
+    free(ud.user_details); //freeing user details dynamic memory
     return 0;
 }

@@ -25,18 +25,6 @@ void initialize_user_reg(User* user, char* first_name, char* last_name, char* nu
     user->isRegistered_ = true;
 }
 
-void init_user_details(UserDetails *ud) 
-{
-    ud->users_capacity_ = 2; // start small
-    ud->users_count_ = 0;
-    ud->user_details = malloc(ud->users_capacity_ * sizeof(User));
-    if (!ud->user_details) 
-    {
-        printf("Memory allocation failed!\n");
-        exit(1);
-    }
-    load_from_userfile(ud);
-}
 
 void init_user_details(UserDetails *ud) 
 {
