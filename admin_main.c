@@ -41,6 +41,7 @@ bool admin(Booking_tickets *Book)
             printf("Saving and Exiting...\n");
             printf("Exit Successful.\n");
             save_movie(Book);
+            break;
             default:
             printf("Invalid choice. Please try again.\n");
         }
@@ -109,7 +110,12 @@ void create_movie(Booking_tickets *Book)//create movie function decleration
 
     valid_price(Book, size);
     
+    for(int i = 0; i < MAX_SEATS_; i++)
+    {
+        initialize_seat(&(Book->booking_movie[size].seats_[i]));
+    }
     Book->movies_count++;
+
 
 }
 
@@ -218,6 +224,13 @@ void initialize(Booking_tickets * Book)
     Book->movies_count = 0;
     //Load movies from file during initialization (After files)
     load_from_file(Book);
+}
+
+void initialize_seat(Seat* seat)
+{
+    static int count = 1;
+    seat->number_ = count++;
+    seat->isEmpty_ = true;
 }
 
 void save_movie_file(Booking_tickets *Book) //save to file definition

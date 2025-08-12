@@ -3,6 +3,9 @@
 
 #define MAX_MOVIES 100
 
+#define MAX_SEATS_ 50
+#define MAX_TICKETS_ 10
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -20,14 +23,12 @@ typedef struct {
     char movie_name[50];
     char movie_time[5];
     double price;
+    Seat seats_[MAX_SEATS_];
 } Movies;
 
 typedef struct {
     Movies booking_movie[MAX_MOVIES];
     int movies_count;
-    Seat seats_[MAX_SEATS_];
-    for(int i = 0; i < MAX_SEATS_; i++)
-    initialize_seat(&seats_[i]);
 } Booking_tickets;
 
 
@@ -43,6 +44,7 @@ void load_from_file(Booking_tickets *Book);//load movies to file
 void initialize(Booking_tickets *Book); //intilizing the file to load from the file
 void valid_price(Booking_tickets *Book, int index);
 bool admin(Booking_tickets *Book);
+void initialize_seat(Seat* seat);
 // bool customer(Booking_tickets *Book);
 
 #endif
