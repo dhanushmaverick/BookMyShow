@@ -30,23 +30,23 @@ int main()
             if(status != 1)
             return 0;
             else
-            status = customer_main(&booking_tickets);
-            if(!status)
+            status = customer(&booking_tickets);
+            if(status != 1)
             return 0;
-        } while (status != 1);
+        } while (true);
         break;
 
         case 2:
         do
         {
-            status = customer_main(&booking_tickets);
+            status = customer(&booking_tickets);
             if(status != 1)
             return 0;
             else
             status = admin(&booking_tickets, &users);
-            if(!status)
+            if(status != 1)
             return 0;
-        } while (status != 1);
+        } while (true);
         break;
         break;
         case 3: 

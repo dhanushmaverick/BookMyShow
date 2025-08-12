@@ -33,7 +33,7 @@ void initialize_user(User* user);
 void initialize_ticket(Ticket* ticket);
 void initialize_seat(Seat* seat);
 
-bool customer_main(Booking_tickets*);
+bool customer(Booking_tickets*);
 bool admin(Booking_tickets *Book, User *user);
 
 void initialize_users_start(User *user);

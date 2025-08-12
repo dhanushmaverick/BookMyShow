@@ -32,19 +32,19 @@ void initialize_ticket(Ticket* ticket)
 
 
 
-bool customer_main(Booking_tickets* booking_tickets)
+bool customer(Booking_tickets* booking_tickets)
 {
 
     User user;
     initialize_user(&user);
-
+    system("cls");
     printf("-----Welcome to BookMyShow!-----\n");
     int choice = 0; 
     do
     {
         printf("Please choose an action below:\n");
         printf("1. User Login\n");
-        printf("2. Register new User\n");
+        printf("2. Register New User\n");
         printf("3. View Available Movies\n");
         printf("4. Book Tickets\n");
         printf("5. View Booked Tickets\n");

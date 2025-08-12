@@ -1,7 +1,60 @@
 
 
 #include "admin_main.h"
+#include "customer_main.h"
 
+bool admin(Booking_tickets *Book, User *user)
+{
+    system("cls");
+    int choice;
+    do
+    {
+        printf("\n----------Admin Menu----------\n");
+        printf("1. Create Movie\n");
+        printf("2. Edit Movie\n");
+        printf("3. Delete Movie\n");
+        printf("4. List all Movies\n");
+        printf("5. List all Users\n");
+        printf("6. Exit to Customer Version\n"); //return false
+        printf("7. Exit Program\n"); //return true
+        printf("Enter your choice: ");//entering the choice
+        scanf("%d", &choice);//reading the choice from the user
+
+        switch (choice) {
+            case 1:
+            create_movie(Book);
+            printf("\n");
+            break;
+            case 2:
+            edit_movie(Book);//edit
+            printf("\n");
+            break;
+            case 3:
+            delete_movie(Book);//delete movie
+            printf("\n");
+            break;
+            case 4:
+            list_movies(Book);//list movies
+            printf("\n");
+            break;
+            case 5:
+            list_users(user);//list movies
+            printf("\n");
+            break;
+            case 6:
+            return 1;
+            break;
+            case 7:
+            printf("Saving and Exiting...\n");
+            printf("Exit Successful.\n");
+            save_movie(Book);
+            break;
+            default:
+            printf("Invalid choice. Please try again.\n");
+        }
+    } 
+    while (choice != 6);
+}
 
 void valid_price(Booking_tickets *Book, int index) 
 {
@@ -34,7 +87,8 @@ void valid_price(Booking_tickets *Book, int index)
             }
         }
 
-        if (valid) {
+        if (valid) 
+        {
             double value = atof(buffer);
             if (value > 0) 
             {
@@ -63,7 +117,12 @@ void create_movie(Booking_tickets *Book)//create movie function decleration
 
     valid_price(Book, size);
     
+    for(int i = 0; i < MAX_SEATS_; i++)
+    {
+        initialize_seat(&(Book->booking_movie[size].seats_[i]));
+    }
     Book->movies_count++;
+
 
 }
 
@@ -153,6 +212,8 @@ void list_movies(Booking_tickets * book)
     }
 }
 
+
+
 void print_movie(Movies* movie)
 {
     printf("Movie_name: %s\n", movie->movie_name);
@@ -172,6 +233,13 @@ void initialize(Booking_tickets * Book)
     Book->movies_count = 0;
     //Load movies from file during initialization (After files)
     load_from_file(Book);
+}
+
+void initialize_seat(Seat* seat)
+{
+    static int count = 1;
+    seat->number_ = count++;
+    seat->isEmpty_ = true;
 }
 
 void save_movie_file(Booking_tickets *Book) //save to file definition

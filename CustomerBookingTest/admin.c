@@ -5,6 +5,7 @@
 
 bool admin(Booking_tickets *Book, User *user)
 {
+    system("cls");
     int choice;
     do
     {

@@ -6,7 +6,6 @@
 #define MAX_SEATS_ 50
 #define MAX_TICKETS_ 10
 
-//#include "customer_main.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -47,6 +46,5 @@ void initialize(Booking_tickets *Book); //intilizing the file to load from the f
 void valid_price(Booking_tickets *Book, int index);
 
 void initialize_seat(Seat* seat);
-// bool customer(Booking_tickets *Book);
 
 #endif
