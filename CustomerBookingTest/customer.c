@@ -68,7 +68,7 @@ bool customer(Booking_tickets* booking_tickets)
             break;
             case 5:
             int i = 0;
-            while(user.tickets_[i].isBooked_ == true)
+            while(i < MAX_TICKETS_ && user.tickets_[i].isBooked_ == true)
             view_ticket(&user.tickets_[i++]);
             if(i == 0)
             printf("No tickets booked yet!\n");
@@ -121,7 +121,7 @@ void register_user(User* user)
     printf("Please Enter Your Last Name: ");
     getchar();
     scanf("%[^\n]", newuser->last_name_);
-    if (!validname(newuser->first_name_)) //function call of validating name
+    if (!validname(newuser->last_name_)) //function call of validating name
     {
         printf("Invalid name\nEnter only characters\n");
         goto read_lastname;//if the entered name does not pass function it prints invalid and calls goto function
@@ -148,9 +148,9 @@ void register_user(User* user)
         printf("Enter valid email_id\n");
         goto reademail;//if the entered email-id does not pass function it prints invalid and calls goto function
     }
-    strcat(newuser->username,newuser->first_name_); 
-    strcat(newuser->username,newuser->last_name_); 
-    printf("New User Created\n\nYour Username is Firstname + Lastname\n\nUsername:%s\n", newuser->username);
+    strcat(newuser->username_,newuser->first_name_); 
+    strcat(newuser->username_,newuser->last_name_); 
+    printf("New User Created\n\nYour Username is Firstname + Lastname\n\nUsername:%s\n", newuser->username_);
 
     printf("Please Choose Your Password: ");
     getchar();
@@ -176,7 +176,7 @@ void view_seats(Movies* movie)//View seats
             else
             printf("X ");
         }
-        printf("%d\n", (i*10)+10);
+        printf("%d\n", (i*10));
     }
     printf("\n");
     printf("Please proceed to selecting your seats.\n");
@@ -220,8 +220,8 @@ void select_seats(User* user, Movies* movie)//Select seats
         {
             printf("%d. ", i+1);
             int no = 0;
-            bool result = scanf("%d", &no);
-            if((result != 1) || (i > MAX_SEATS_) || (i < 0) || (movie->seats_[i].isEmpty_ == true))
+            int result = scanf("%d", &no);
+            if((result != 1) || (i > MAX_SEATS_) || (i < 0) || (movie->seats_[no].isEmpty_ == true))
             {
                 printf("Invalid input. Please enter a valid unoccupied seat number.\n");
                 // Clear input buffer
@@ -269,24 +269,13 @@ void pay_for_seats(User* user)//Pay for seats
 void book_tickets(User* user, Booking_tickets* booking_tickets)
 {
     bool booked = false;
+    int movie_number = 0;
+    int result = 0;
+    char ch;
+    select_movie(user, booking_tickets, &movie_number);
     do
     {
-        printf("Please select a Movie from the list below: \n");
-        list_movies(booking_tickets);
-        int movie_number = 0;
-        int result;
-        char ch;
         do {
-            printf("Movie Number: ");
-            result = scanf("%d", &movie_number);
-            //printf("Result = %d",result);
-
-            if (result != 1 && (movie_number < booking_tickets->movies_count) || movie_number < 0) 
-            {
-                printf("Invalid input. Please enter a valid movie number.\n");
-                // Clear input buffer
-                while ((ch = getchar()) != '\n' && ch != EOF);
-            }
             int option = 0;
             printf("Options:\n");
             printf("1. View Seats\n");
@@ -299,16 +288,16 @@ void book_tickets(User* user, Booking_tickets* booking_tickets)
             switch(option)
             {
                 case(1):
-                view_seats(&booking_tickets->booking_movie[result-1]);
+                view_seats(&booking_tickets->booking_movie[movie_number]);
                 break;
                 case(2):
-                select_seats(user,&booking_tickets->booking_movie[result-1]);
+                select_seats(user,&booking_tickets->booking_movie[movie_number]);
                 break;
                 case(3):
                 pay_for_seats(user);
                 break;
                 case(4):
-                break;
+                select_movie(user, booking_tickets, &movie_number);
                 case(5):
                 booked = true;
                 return;
@@ -321,3 +310,27 @@ void book_tickets(User* user, Booking_tickets* booking_tickets)
     while(!booked);
 }
 
+void select_movie(User* user,Booking_tickets* booking_tickets, int* movie)
+{
+    int result = 0;
+    char ch;
+    printf("Please select a Movie from the list below: \n");
+    list_movies(booking_tickets);
+    do
+    {
+        printf("Movie Number: ");
+        result = scanf("%d", movie);
+        //printf("Result = %d",result);
+        
+        if (result != 1 || (*movie > booking_tickets->movies_count) || (*movie <= 0)) 
+        {
+            printf("Invalid input. Please enter a valid movie number.\n");
+            // Clear input buffer
+            while ((ch = getchar()) != '\n' && ch != EOF);
+            result = 0;
+        }
+    }while(result != 1);
+    *movie -= 1;
+    printf("Movie %d successfully chosen.\n",*movie + 1);
+    return;
+}

@@ -24,7 +24,7 @@ typedef struct{
     char email_[100];
     bool isRegistered_;
 
-    char username[100];
+    char username_[100];
     char password_[100];
     int count;
 }User;
@@ -44,12 +44,13 @@ void list_users(User* user);
 void load_from_userfile(User *user);//loading users to file function definition 
 
 
-    //View available movies
+//View available movies
 void book_tickets(User* user, Booking_tickets* booking_tickets);//Book tickets
 void view_seats(Movies* movie);//View seats
 void select_seats(User* user, Movies* movie);//Select seats
 void pay_for_seats(User* user);//Pay for seats
 void view_ticket(Ticket* ticket);//View ticket
+void select_movie(User* user,Booking_tickets* booking_tickets, int* movie);
 
 
 int validname(char *p);

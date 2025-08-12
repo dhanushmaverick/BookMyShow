@@ -75,7 +75,7 @@ void list_users(User *user)
             printf(" %-20s", user->last_name_);
             printf(" %-20s", user->number_);
             printf(" %-20s", user->email_);
-            printf(" %-20s", user->username);
+            printf(" %-20s", user->username_);
             printf(" %-20s", user->password_);
             printf(" %-20d", user->isRegistered_);
             printf("\n");
@@ -111,7 +111,7 @@ void load_from_userfile(User *user)//loading users to file function definition
         fscanf(fptr, "%[^,],", user->last_name_);
         fscanf(fptr, "%[^,],", user->number_);
         fscanf(fptr, "%[^,],",user->email_);
-        fscanf(fptr, "%[^,],", user->username);
+        fscanf(fptr, "%[^,],", user->username_);
         fscanf(fptr, "%[^\n]\n", user->password_);
     }
     fclose(fptr);//closing the file
@@ -129,7 +129,7 @@ void save_user_file(User *user) //save to file definition
     for (int i = 0; i < user->count ;i++) 
     {
         //printing  in the file 
-        fprintf(fptr, "%s,%s,%s,%s,%s,%s\n", user->first_name_,user->last_name_,user->number_,user->email_,user->username,user->password_);
+        fprintf(fptr, "%s,%s,%s,%s,%s,%s\n", user->first_name_,user->last_name_,user->number_,user->email_,user->username_,user->password_);
     }
     fclose(fptr);//closing the file
     printf("User Registered successfully\n");//printing the statment that movies are saved to file successfully
