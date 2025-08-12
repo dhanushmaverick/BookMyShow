@@ -23,25 +23,32 @@ typedef struct{
     char number_[20];
     char email_[100];
     bool isRegistered_;
-
+    int ID_; //id is the count of users registered and the unique ID
     char username_[100];
     char password_[100];
-    int count;
 }User;
+
+typedef struct {
+    User *user_details;
+    int users_count_; // track current number of users
+    int users_capacity_; // track current capacity
+} UserDetails;
 
 void initialize_user(User* user);
 void initialize_ticket(Ticket* ticket);
 void initialize_seat(Seat* seat);
 
-bool customer(Booking_tickets*);
-bool admin(Booking_tickets *Book, User *user);
+bool customer(Booking_tickets* booking_tickets, UserDetails* ud);
+bool admin(Booking_tickets *Book, UserDetails *ud);
 
 void initialize_users_start(User *user);
-void login_user(User* user);//Login user
-void register_user(User* user);//Register user
-void save_user_file(User* user); //saving the user details function decleration
-void list_users(User* user);
-void load_from_userfile(User *user);//loading users to file function definition 
+void login_user(UserDetails* ud);//Login user
+void register_user(UserDetails* user);//Register user
+void save_user_file(UserDetails *user); //saving the user details function decleration
+void list_users(UserDetails *ud);
+void load_from_userfile(UserDetails *user);//loading users to file function definition
+void ensure_capacity(UserDetails *ud);
+void init_user_details(UserDetails *ud);//
 
 
 //View available movies

@@ -3,9 +3,9 @@
 #include "admin.h"
 #include "customer.h"
 
-bool admin(Booking_tickets *Book, User *user)
+bool admin(Booking_tickets *Book, UserDetails *ud)
 {
-    system("cls");
+    //system("cls");
     int choice;
     do
     {
@@ -22,35 +22,35 @@ bool admin(Booking_tickets *Book, User *user)
 
         switch (choice) {
             case 1:
-            create_movie(Book);
-            printf("\n");
-            break;
+                create_movie(Book);
+                printf("\n");
+                break;
             case 2:
-            edit_movie(Book);//edit
-            printf("\n");
-            break;
+                edit_movie(Book);//edit
+                printf("\n");
+                break;
             case 3:
-            delete_movie(Book);//delete movie
-            printf("\n");
-            break;
+                delete_movie(Book);//delete movie
+                printf("\n");
+                break;
             case 4:
-            list_movies(Book);//list movies
-            printf("\n");
-            break;
+                list_movies(Book);//list movies
+                printf("\n");
+                break;
             case 5:
-            list_users(user);//list movies
-            printf("\n");
-            break;
+                list_users(ud);//list users
+                printf("\n");
+                break;
             case 6:
-            return 1;
-            break;
+                return 1;
+                break;
             case 7:
-            printf("Saving and Exiting...\n");
-            printf("Exit Successful.\n");
-            save_movie(Book);
+                printf("Saving and Exiting...\n");
+                printf("Exit Successful.\n");
+                save_movie(Book);
             break;
             default:
-            printf("Invalid choice. Please try again.\n");
+                printf("Invalid choice. Please try again.\n");
         }
     } 
     while (choice != 6);
@@ -128,7 +128,65 @@ void create_movie(Booking_tickets *Book)//create movie function decleration
 
 void edit_movie(Booking_tickets *book)
 {
+    /* Defining the logic for Edit movie */
+    char str[50];
+    int flag = 0;
+    int option;
+    int same_movie[30];
+    int k = 0;
+    search:
+        printf("Please Enter the name of Movie to edit: ");
+        getchar();//reading the name from the user based on the option
+        scanf("%[^\n]", str);
+    for (int i = 0; i < book->movies_count; i++)
+    {
+        if ((strcmp(book->booking_movie[i].movie_name, str) == 0))
+        {
+            same_movie[k++] = i;//increasing the k value
+        }
+    }
+    if(k == 0)
+    {
+        printf("No matching Movie found\n");
+        goto search;//if no matching found then again going to search option
+    }
+    else
+    {
+        printf("Found %d matching Movies:\n", k);
+        for (int i = 0; i < k; i++) 
+        {
+            int j = same_movie[i];
+            printf("Movie S.No %d\n", i+1);
+            printf("Movie Name: %s\n", book->booking_movie[j].movie_name);
+            printf("Movie Time: %s\n", book->booking_movie[j].movie_time);
+            printf("Movie price: %lf\n", book->booking_movie[j].price);
+            printf("\n");
+        }
+    }
+    int c;
+    choice:
+    printf("Enter your Movie choice: ");
+    scanf("%d", &c);
+    if (c < 1 || c > k) 
+    {
+        printf("Invalid choice\n");
+        goto choice;//if the choice is invalid then again going to choice option
+    }
+    int editindex = same_movie[c - 1];
+    //if the entered choice is correct proceding to editing the selected movie
+    printf("Editing Movie:\n");
+    //editing name of movie
+    printf("Name of Movie(current: %s): ", book->booking_movie[editindex].movie_name);
+    getchar();//reading the name from the user
+    scanf("%[^\n]", book->booking_movie[editindex].movie_name);
 
+    printf("Enter the time of the Movie(current: %s): ",book->booking_movie[editindex].movie_time);
+    scanf("%s", book->booking_movie[editindex].movie_time);//reading the phone number from the user
+    
+    printf("Enter Price of the movie(current: %lf): ", book->booking_movie[editindex].price);
+    scanf("%lf",&book->booking_movie[editindex].price);//reading the email_id from the user
+    
+    printf("Movie updated successfully\n");
 
 }
 
@@ -136,10 +194,7 @@ void edit_movie(Booking_tickets *book)
 void delete_movie(Booking_tickets *Book)
 {
     char str[50];
-    //int option;
     int same_movie[30];
-    //printf("Delete Movie by:\n1. Movie_name\nEnter option: ");
-    //scanf("%d", &option);
 
     printf("Enter the Movie: ");
     getchar();//reading the input from the user
