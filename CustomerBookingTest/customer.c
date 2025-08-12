@@ -233,7 +233,7 @@ void view_seats(Movies* movie)//View seats
     {
         for(int j = 0; j < 10; j++)
         {
-            if(movie->seats_[((i-1)*10)+j].isEmpty_)
+            if(movie->seats_[((i-1)*10)+j].isEmpty_ == true)
             printf("* ");
             else
             printf("X ");
@@ -246,17 +246,18 @@ void view_seats(Movies* movie)//View seats
 
 void select_seats(User* user, Movies* movie)//Select seats
 {
-    //clear prev selection
-    if(user->isRegistered_ == false)
-    {
-        printf("You cannot select tickets as you aren't registered!\nPlease register yourself and login in order to select seats!\n");
-        return;
-    }
-    else if(user->isLoggedIn_ == false)
-    {
-        printf("Please login first in order to select seats!\n");
-        return;
-    }
+    // //clear prev selection
+    // if(user->isRegistered_ == false)
+    // {
+    //     printf("You cannot select tickets as you aren't registered!\nPlease register yourself and login in order to select seats!\n");
+    //     return;
+    // }
+    // else if(user->isLoggedIn_ == false)
+    // {
+    //     printf("Please login first in order to select seats!\n");
+    //     return;
+    // }user,&booking_tickets->booking_movie[movie_number]
+    view_seats(movie);
     for(int i = 0; i < MAX_TICKETS_; i++)
     {
         for(int j = 0; j < MAX_SEATS_; j++)

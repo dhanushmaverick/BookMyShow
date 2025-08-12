@@ -1,6 +1,7 @@
-//-user login user name ID cov=nversion from int to char wrong --> atoi()
 //-forgot username/password --> ask mobile/email  ---> display username, pass
-//-edit user credentials
+//-edit user credentials ///
+//-add occupied seats and available number of seats to csv
+//-in saving and loading, take care of occcupied seats logic
 
 #include "admin.h"
 #include "customer.h"
