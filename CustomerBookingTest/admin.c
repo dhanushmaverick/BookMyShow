@@ -1,4 +1,6 @@
-
+//-user login user name ID cov=nversion from int to char wrong --> atoi()
+//-forgot username/password --> ask mobile/email  ---> display username, pass
+//-edit user credentials
 
 #include "admin.h"
 #include "customer.h"

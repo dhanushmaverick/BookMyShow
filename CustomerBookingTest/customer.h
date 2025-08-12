@@ -43,8 +43,8 @@ bool customer(Booking_tickets* booking_tickets, UserDetails* ud);
 bool admin(Booking_tickets *Book, UserDetails *ud);
 
 void initialize_users_start(User *user);
-void login_user(UserDetails* ud);//Login user
-void register_user(UserDetails* user);//Register user
+void login_user(User* user,UserDetails* ud);//Login user
+void register_user(User* user,UserDetails* ud);//Register user
 void save_user_file(UserDetails *user); //saving the user details function decleration
 void list_users(UserDetails *ud);
 void load_from_userfile(UserDetails *user);//loading users to file function definition
