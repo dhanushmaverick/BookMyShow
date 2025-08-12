@@ -1,5 +1,5 @@
-#ifndef CUSTOMER_MAIN__C
-#define CUSTOMER_MAIN__C
+#ifndef CUSTOMER_MAIN__H
+#define CUSTOMER_MAIN__H
 
 #include "admin_main.h"
 #include <stdbool.h>
@@ -34,17 +34,29 @@ void initialize_ticket(Ticket* ticket);
 void initialize_seat(Seat* seat);
 
 bool customer_main(Booking_tickets*);
+bool admin(Booking_tickets *Book, User *user);
+
+void initialize_users_start(User *user);
 void login_user(User* user);//Login user
 void register_user(User* user);//Register user
-void save_user_file(User *user); //saving the user details function decleration
+void save_user_file(User* user); //saving the user details function decleration
+void list_users(User* user);
+void load_from_userfile(User *user);//loading users to file function definition 
+
 
     //View available movies
-    void book_tickets(User* user, Booking_tickets* booking_tickets);//Book tickets
-    void view_seats(Movies* movie);//View seats
-    void select_seats(User* user, Movies* movie);//Select seats
-    void pay_for_seats(User* user);//Pay for seats
-    void view_ticket(Ticket* ticket);//View ticket
-    //Exit program
+void book_tickets(User* user, Booking_tickets* booking_tickets);//Book tickets
+void view_seats(Movies* movie);//View seats
+void select_seats(User* user, Movies* movie);//Select seats
+void pay_for_seats(User* user);//Pay for seats
+void view_ticket(Ticket* ticket);//View ticket
+
+
+int validname(char *p);
+int validemail(char* email, User *user);
+int validphone(char *phone, User *user);
+//Exit program
+
 
 
 #endif

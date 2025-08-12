@@ -1,8 +1,9 @@
 
 
 #include "admin_main.h"
+#include "customer_main.h"
 
-bool admin(Booking_tickets *Book)
+bool admin(Booking_tickets *Book, User *user)
 {
     int choice;
     do
@@ -12,8 +13,9 @@ bool admin(Booking_tickets *Book)
         printf("2. Edit Movie\n");
         printf("3. Delete Movie\n");
         printf("4. List all Movies\n");
-        printf("5. Exit to Customer Version\n"); //return false
-        printf("6. Exit Program\n"); //return true
+        printf("5. List all Users\n");
+        printf("6. Exit to Customer Version\n"); //return false
+        printf("7. Exit Program\n"); //return true
         printf("Enter your choice: ");//entering the choice
         scanf("%d", &choice);//reading the choice from the user
 
@@ -35,9 +37,13 @@ bool admin(Booking_tickets *Book)
             printf("\n");
             break;
             case 5:
-            return 1;
+            list_users(user);//list movies
+            printf("\n");
             break;
             case 6:
+            return 1;
+            break;
+            case 7:
             printf("Saving and Exiting...\n");
             printf("Exit Successful.\n");
             save_movie(Book);
@@ -204,6 +210,8 @@ void list_movies(Booking_tickets * book)
         printf("-----------------------------------------------------------------\n");
     }
 }
+
+
 
 void print_movie(Movies* movie)
 {

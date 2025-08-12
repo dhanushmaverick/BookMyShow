@@ -1,5 +1,6 @@
 #include "customer_main.h"
 
+
 void initialize_user(User* user)
 {
     strcpy(user->first_name_ ,"\0");
@@ -48,7 +49,7 @@ bool customer_main(Booking_tickets* booking_tickets)
         printf("4. Book Tickets\n");
         printf("5. View Booked Tickets\n");
         printf("6. Exit Program\n"); //return false
-       // printf("6. Exit to Admin Version\n"); //return true //make secret
+       // printf("7. Exit to Admin Version\n"); //return true //make secret
         printf("Enter your choice: ");//entering the choice
         scanf("%d", &choice);//reading the choice from the user
 
@@ -104,48 +105,60 @@ void register_user(User* user)
 {
     //take inputs for all members of user
     //call initialize_user_reg
-    
+    User *newuser = &user[user->count];
+
+    read_firstname:
     printf("Please Enter Your First Name: ");
     getchar();
-    scanf("%[^\n]", user->first_name_);
+    scanf("%[^\n]", newuser->first_name_);
+    if (!validname(newuser->first_name_)) //function call of validating name
+    {
+        printf("Invalid name\nEnter only characters\n");
+        goto read_firstname;//if the entered name does not pass function it prints invalid and calls goto function
+    }
 
+    read_lastname:
     printf("Please Enter Your Last Name: ");
     getchar();
-    scanf("%[^\n]", user->last_name_);
+    scanf("%[^\n]", newuser->last_name_);
+    if (!validname(newuser->first_name_)) //function call of validating name
+    {
+        printf("Invalid name\nEnter only characters\n");
+        goto read_lastname;//if the entered name does not pass function it prints invalid and calls goto function
+    }
 
+    readphone:
     printf("Please Enter Your Mobile Number: ");
     getchar();
-    scanf("%[^\n]", user->number_);
+    scanf("%[^\n]", newuser->number_);
+    if(!validphone(newuser->number_, user))//function call of validating phone number
+    {
+        printf("Invalid phone number\n");
+        printf("Enter phone number(10 digits)\n");
+        goto readphone;//if the entered phone number does not pass function it prints invalid and calls goto function
+    }
 
+    reademail:
     printf("Please Enter Your Mail ID: ");
     getchar();
-    scanf("%[^\n]", user->email_);
-    strcat(user->first_name_,user->last_name_); 
-    printf("New User Created\n\nYour Username is Firstname + Lastname\n\nUsername:%s\n", user->first_name_);
+    scanf("%[^\n]", newuser->email_);
+    if(!validemail(newuser->email_, user)) //function call of validating email
+    {
+        printf("Invalid email_id\n");
+        printf("Enter valid email_id\n");
+        goto reademail;//if the entered email-id does not pass function it prints invalid and calls goto function
+    }
+    strcat(newuser->username,newuser->first_name_); 
+    strcat(newuser->username,newuser->last_name_); 
+    printf("New User Created\n\nYour Username is Firstname + Lastname\n\nUsername:%s\n", newuser->username);
 
     printf("Please Choose Your Password: ");
     getchar();
-    scanf("%[^\n]", user->password_);
+    scanf("%[^\n]", newuser->password_);
 
     user->count++;
+    newuser->isRegistered_ = true;
     save_user_file(user);
-}
-
-void save_user_file(User *user) //save to file definition
-{
-    FILE* fptr = fopen("userdetails.csv","w+");//opening the file
-    if (!fptr) 
-    {
-        printf("Error opening file for writing\n");//printing the error if the file is not opened
-    }
-    fprintf(fptr,"#%d\n", user->count);//printing the number of movies in address book
-    for (int i = 0; i < user->count ;i++) 
-    {
-        //printing  in the file 
-        fprintf(fptr, "%s,%s,%s,%s,%s,%s\n", user->first_name_,user->last_name_,user->number_,user->email_,user->username,user->password_);
-    }
-    fclose(fptr);//closing the file
-    printf("User saved successfully\n");//printing the statment that movies are saved to file successfully
 }
 
 

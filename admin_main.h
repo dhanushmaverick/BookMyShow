@@ -6,6 +6,7 @@
 #define MAX_SEATS_ 50
 #define MAX_TICKETS_ 10
 
+//#include "customer_main.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -37,13 +38,14 @@ void create_movie(Booking_tickets *Book);//create function decleration
 void print_movie(Movies* movie);
 void edit_movie(Booking_tickets *Book);
 void delete_movie(Booking_tickets *Book);
-void list_movies(Booking_tickets * Book);
+void list_movies(Booking_tickets *Book);
+
 void save_movie(Booking_tickets * Book);
 void save_movie_file(Booking_tickets *Book);//save to file
 void load_from_file(Booking_tickets *Book);//load movies to file 
 void initialize(Booking_tickets *Book); //intilizing the file to load from the file
 void valid_price(Booking_tickets *Book, int index);
-bool admin(Booking_tickets *Book);
+
 void initialize_seat(Seat* seat);
 // bool customer(Booking_tickets *Book);
 
