@@ -56,81 +56,100 @@ int validphone(char *phone, User *user)
 
 
 
-void list_users(User *user)
+void list_users(UserDetails *ud) 
 {
-    if (user->count == 0)
+    if (ud->users_count_ == 0) 
     {
-        printf("No Users Found\n");//if the movie is zero it prints no movies
-    } 
-    else 
+        printf("No Users Found\n");
+        return;
+    }
+    printf("------------------------------------------------------------------Users List-----------------------------------------------------------------\n");
+    printf("%-5s %-20s %-20s %-20s %-20s %-20s %-20s %-20s\n", 
+           "S.No", "Firstname", "Lastname", "Number", "Email ID", "Username", "Password", "Registration");
+    printf("---------------------------------------------------------------------------------------------------------------------------------------------\n");
+    for (int i = 0; i < ud->users_count_; i++) 
     {
-        printf("------------------------------------------------------------------Users List-----------------------------------------------------------------\n");
-        //if movie count is not zero then it prints movies
-        printf("%-5s %-20s %-20s %-20s %-20s %-20s %-20s %-20s\n", "S.No", "Firstname", "Lastname", "Number", "Email ID", "Username", "Password", "Registration");
-        printf("---------------------------------------------------------------------------------------------------------------------------------------------\n");
-        for (int i = 0; i < user->count; i++) 
+        printf("%-5d %-20s %-20s %-20s %-20s %-20s %-20s %-20d\n",
+               i + 1,
+               ud->user_details[i].first_name_,
+               ud->user_details[i].last_name_,
+               ud->user_details[i].number_,
+               ud->user_details[i].email_,
+               ud->user_details[i].username_,
+               ud->user_details[i].password_,
+               ud->user_details[i].isRegistered_);
+    }
+    printf("---------------------------------------------------------------------------------------------------------------------------------------------\n");
+}
+
+// void save_user(User *user)
+// {
+//     save_user_file(user); // Save movies to file
+//     //exit(EXIT_SUCCESS); // Exit the program
+// }
+
+// void initialize_users_start(User *user)
+// {
+//     user->ID_ = 0;
+//     load_from_userfile(user);
+// }
+
+
+void load_from_userfile(UserDetails *user)
+{
+    FILE *fptr = fopen("userdetails.csv", "r");
+    if (!fptr) 
+    {
+        printf("No existing user file found. Starting fresh.\n");
+        return;
+    }
+    fscanf(fptr, "#%d\n", &user->users_count_);
+    ensure_capacity(user);
+    for (int i = 0; i < user->users_count_; i++) {
+        fscanf(fptr, "%[^,],", user->user_details[i].first_name_);
+        fscanf(fptr, "%[^,],", user->user_details[i].last_name_);
+        fscanf(fptr, "%[^,],", user->user_details[i].number_);
+        fscanf(fptr, "%[^,],", user->user_details[i].email_);
+        fscanf(fptr, "%[^,],", user->user_details[i].username_);
+        fscanf(fptr, "%[^\n]\n", user->user_details[i].password_);
+        user->user_details[i].isRegistered_ = true;
+        user->user_details[i].ID_ = i + 1;
+    }
+    fclose(fptr);
+    printf("%d users loaded from file.\n", user->users_count_);
+}
+
+void save_user_file(UserDetails *user) 
+{
+    FILE *fptr = fopen("userdetails.csv", "w+");
+    if (!fptr) 
+    {
+        printf("Error opening file for writing\n");
+        return;
+    }
+    fprintf(fptr, "#%d\n", user->users_count_);
+    for (int i = 0; i < user->users_count_; i++) 
+    {
+        fprintf(fptr, "%s,%s,%s,%s,%s,%s\n",
+                user->user_details[i].first_name_,user->user_details[i].last_name_,user->user_details[i].number_,
+                user->user_details[i].email_,user->user_details[i].username_,user->user_details[i].password_);
+    }
+    fclose(fptr);
+    printf("User data saved successfully.\n");
+}
+
+
+void ensure_capacity(UserDetails *user) 
+{
+    if (user->users_count_ >= user->users_capacity_) 
+    {
+        user->users_capacity_ *= 2; // double capacity
+        User *temp = realloc(user->user_details, user->users_capacity_ * sizeof(User));
+        if (!temp) 
         {
-            printf("%-5d", i + 1);
-            printf(" %-20s", user->first_name_);
-            printf(" %-20s", user->last_name_);
-            printf(" %-20s", user->number_);
-            printf(" %-20s", user->email_);
-            printf(" %-20s", user->username);
-            printf(" %-20s", user->password_);
-            printf(" %-20d", user->isRegistered_);
-            printf("\n");
+            printf("Memory reallocation failed!\n");
+            exit(1);
         }
-        printf("----------------------------------------------------------------------------------------------------------------------------------------------\n");
+        user->user_details = temp;
     }
-}
-
-void save_user(User *user)
-{
-    save_user_file(user); // Save movies to file
-    //exit(EXIT_SUCCESS); // Exit the program
-}
-
-void initialize_users_start(User *user)
-{
-    user->count = 0;
-    load_from_userfile(user);
-}
-
-void load_from_userfile(User *user)//loading users to file function definition 
-{
-    FILE* fptr = fopen("userdetails.csv","r");//opening the file in read format
-    if (!fptr) 
-    {
-        printf("Error opening file for reading\n");//printing error opening if file doesn't opened
-    }
-    fscanf(fptr,"#%d\n",&user->count);
-    for (int i = 0; i < user->count; i++) 
-    {
-
-        fscanf(fptr, "%[^,],",user->first_name_);
-        fscanf(fptr, "%[^,],", user->last_name_);
-        fscanf(fptr, "%[^,],", user->number_);
-        fscanf(fptr, "%[^,],",user->email_);
-        fscanf(fptr, "%[^,],", user->username);
-        fscanf(fptr, "%[^\n]\n", user->password_);
-    }
-    fclose(fptr);//closing the file
-    printf("Users loaded from file successfully\n");
-}
-
-void save_user_file(User *user) //save to file definition
-{
-    FILE* fptr = fopen("userdetails.csv","w+");//opening the file
-    if (!fptr) 
-    {
-        printf("Error opening file for writing\n");//printing the error if the file is not opened
-    }
-    fprintf(fptr,"#%d\n", user->count);//printing the number of movies in address book
-    for (int i = 0; i < user->count ;i++) 
-    {
-        //printing  in the file 
-        fprintf(fptr, "%s,%s,%s,%s,%s,%s\n", user->first_name_,user->last_name_,user->number_,user->email_,user->username,user->password_);
-    }
-    fclose(fptr);//closing the file
-    printf("User Registered successfully\n");//printing the statment that movies are saved to file successfully
 }

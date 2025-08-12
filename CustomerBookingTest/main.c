@@ -10,10 +10,11 @@ int main()
     
     Booking_tickets booking_tickets;
     User users;
+    UserDetails ud;
     //booking_tickets.movies_count = 0;
-    
     initialize(&booking_tickets); // Initializing the file to load at the start
-    initialize_users_start(&users);
+    //initialize_users_start(&users);
+    init_user_details(&ud);//put this  to admin
     
     bool status = false;
     int choice;
@@ -26,11 +27,11 @@ int main()
         printf("You Accessed As Admin\n");
         do
         {
-            status = admin(&booking_tickets, &users);
+            status = admin(&booking_tickets, &ud);
             if(status != 1)
             return 0;
             else
-            status = customer(&booking_tickets);
+            status = customer(&booking_tickets, &ud);
             if(status != 1)
             return 0;
         } while (true);
@@ -39,11 +40,11 @@ int main()
         case 2:
         do
         {
-            status = customer(&booking_tickets);
+            status = customer(&booking_tickets, &ud);
             if(status != 1)
             return 0;
             else
-            status = admin(&booking_tickets, &users);
+            status = admin(&booking_tickets, &ud);
             if(status != 1)
             return 0;
         } while (true);
@@ -56,10 +57,8 @@ int main()
         printf("Invalid choice. Please try again.\n");
 
     }
+    free(ud.user_details);
 
-    
-    
     //bool customer_main() //secret input value 
-    
     return 0;
 }
