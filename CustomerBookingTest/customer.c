@@ -11,6 +11,7 @@ void initialize_user(User* user)
     user->isRegistered_ = false;
     for(int i = 0; i < MAX_TICKETS_; i++)
     user->tickets_[i].isBooked_ = false;
+    user->isLoggedIn_ = false;
 }
 
 void initialize_user_reg(User* user, char* first_name, char* last_name, char* number, char* email, char* password)
@@ -20,13 +21,20 @@ void initialize_user_reg(User* user, char* first_name, char* last_name, char* nu
     strcpy(user->number_,number);
     strcpy(user->email_,email);
     strcpy(user->password_, password);
+    user->isLoggedIn_ = false;
     user->isRegistered_ = true;
 }
 
-void initialize_ticket(Ticket* ticket)
+void initialize_ticket(Ticket* ticket, bool withID)
 {
     static int count = 1;
+    if(withID)
     ticket->ID_ = count++;
+    else
+    {
+        ticket->ID_ = 0;
+        count--;
+    }
     ticket->isBooked_ = false;
 }
 
@@ -181,18 +189,30 @@ void view_seats(Movies* movie)//View seats
     printf("\n");
     printf("Please proceed to selecting your seats.\n");
 }
+
 void select_seats(User* user, Movies* movie)//Select seats
 {
-    static int Tickets = 123;
     //clear prev selection
+    if(user->isRegistered_ == false)
+    {
+        printf("You cannot select tickets as you aren't registered!\nPlease register yourself and login in order to select seats!\n");
+        return;
+    }
+    else if(user->isLoggedIn_ == false)
+    {
+        printf("Please login first in order to select seats!\n");
+        return;
+    }
     for(int i = 0; i < MAX_TICKETS_; i++)
     {
-        if(movie->seats_[i].number_ == user->tickets_[i].seat_.number_)
+        for(int j = 0; j < MAX_SEATS_; j++)
         {
-            initialize_seat(&movie->seats_[i]);
+            if(movie->seats_[j].number_ == user->tickets_[i].seat_.number_)
+            {
+                initialize_seat(&movie->seats_[j]);
+                initialize_ticket(&user->tickets_[i], false);
+            }
         }
-        initialize_ticket(&user->tickets_[i]);
-        user->tickets_[i].ID_ = Tickets++;
     }
     printf("How many tickets would you like to purchase?\n");
     int tickets = 1;
@@ -204,8 +224,9 @@ void select_seats(User* user, Movies* movie)//Select seats
         if(tickets == 0)
         {
             printf("Seat selection terminated since 0 tickets selected.\n");
+            return;
         }
-        if (result != 1 || tickets > MAX_TICKETS_) {
+        if (result != 1 || tickets > MAX_TICKETS_ || tickets <= 0) {
             printf("Invalid input. Please enter a valid number of tickets, max is 10 per person.\n");
             // Clear input buffer
             while ((ch = getchar()) != '\n' && ch != EOF);
@@ -215,33 +236,45 @@ void select_seats(User* user, Movies* movie)//Select seats
     int count = 0;
     for(int i = 0; i < tickets; i++)
     {
-        bool valid = false;
+        int valid = 0;
         do
         {
-            printf("%d. ", i+1);
+            printf("Seat %d: ", i+1);
             int no = 0;
-            int result = scanf("%d", &no);
-            if((result != 1) || (i > MAX_SEATS_) || (i < 0) || (movie->seats_[no].isEmpty_ == true))
+            valid = scanf("%d", &no);
+            if((valid != 1) || (no > MAX_SEATS_) || (no < 1) || (movie->seats_[no-1].isEmpty_ == false))
             {
                 printf("Invalid input. Please enter a valid unoccupied seat number.\n");
                 // Clear input buffer
                 while ((ch = getchar()) != '\n' && ch != EOF);
+                valid = 0;
             }
             else
             {
-                movie->seats_[i].isEmpty_ = false;
+                initialize_ticket(&user->tickets_[count], true);
+                movie->seats_[no-1].isEmpty_ = false;
                 user->tickets_[count].movie_ = *movie;
-                user->tickets_[count++].seat_ = movie->seats_[i];
-                valid = true;
+                user->tickets_[count++].seat_ = movie->seats_[no-1];
+                valid = 1;
             }
         }
-        while(valid != true);
+        while(valid != 1);
     }
     printf("Selection Confirmed. You can now proceed to checkout if you'd like.\n");
     return;
 }
 void pay_for_seats(User* user)//Pay for seats
 {
+    if(user->isRegistered_ == false)
+    {
+        printf("You cannot pay for tickets as you aren't registered!\n Please register yourself and login in order to pay!\n");
+        return;
+    }
+    else if(user->isLoggedIn_ == false)
+    {
+        printf("Please login first in order to pay!\n");
+        return;
+    }
     int i = 0;
     double cost = 0.0;
     for(i = 0; i < MAX_TICKETS_; i++)

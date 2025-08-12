@@ -23,14 +23,14 @@ typedef struct{
     char number_[20];
     char email_[100];
     bool isRegistered_;
-
+    bool isLoggedIn_;
     char username_[100];
     char password_[100];
     int count;
 }User;
 
 void initialize_user(User* user);
-void initialize_ticket(Ticket* ticket);
+void initialize_ticket(Ticket* ticket, bool withID);
 void initialize_seat(Seat* seat);
 
 bool customer(Booking_tickets*);

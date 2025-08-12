@@ -55,11 +55,6 @@ int main()
         default:
         printf("Invalid choice. Please try again.\n");
 
-    }
-
-    
-    
-    //bool customer_main() //secret input value 
-    
+    }    
     return 0;
 }
