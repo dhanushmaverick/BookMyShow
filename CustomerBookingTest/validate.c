@@ -56,32 +56,6 @@ int validphone(char *phone, User *user)
 
 
 
-void list_users(UserDetails *ud) 
-{
-    if (ud->users_count_ == 0) 
-    {
-        printf("No Users Found\n");
-        return;
-    }
-    printf("------------------------------------------------------------------Users List-----------------------------------------------------------------\n");
-    printf("%-5s %-20s %-20s %-20s %-20s %-20s %-20s %-20s\n", 
-           "S.No", "Firstname", "Lastname", "Number", "Email ID", "Username", "Password", "Registration");
-    printf("---------------------------------------------------------------------------------------------------------------------------------------------\n");
-    for (int i = 0; i < ud->users_count_; i++) 
-    {
-        printf("%-5d %-20s %-20s %-20s %-20s %-20s %-20s %-20d\n",
-               i + 1,
-               ud->user_details[i].first_name_,
-               ud->user_details[i].last_name_,
-               ud->user_details[i].number_,
-               ud->user_details[i].email_,
-               ud->user_details[i].username_,
-               ud->user_details[i].password_,
-               ud->user_details[i].isRegistered_);
-    }
-    printf("---------------------------------------------------------------------------------------------------------------------------------------------\n");
-}
-
 // void save_user(User *user)
 // {
 //     save_user_file(user); // Save movies to file
