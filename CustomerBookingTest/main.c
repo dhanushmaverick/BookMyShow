@@ -2,8 +2,8 @@
 to display the intilal menu*/
 
 
-#include "admin_main.h"
-#include "customer_main.h"
+#include "admin.h"
+#include "customer.h"
 
 int main()
 {

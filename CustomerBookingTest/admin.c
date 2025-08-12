@@ -1,7 +1,7 @@
 
 
-#include "admin_main.h"
-#include "customer_main.h"
+#include "admin.h"
+#include "customer.h"
 
 bool admin(Booking_tickets *Book, User *user)
 {

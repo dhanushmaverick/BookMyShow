@@ -1,7 +1,7 @@
 #ifndef CUSTOMER_MAIN__H
 #define CUSTOMER_MAIN__H
 
-#include "admin_main.h"
+#include "admin.h"
 #include <stdbool.h>
 #include <string.h>
 

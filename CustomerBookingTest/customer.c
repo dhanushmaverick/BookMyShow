@@ -1,4 +1,4 @@
-#include "customer_main.h"
+#include "customer.h"
 
 
 void initialize_user(User* user)

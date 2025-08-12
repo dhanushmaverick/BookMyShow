@@ -1,5 +1,5 @@
-#include "customer_main.h"
-#include "admin_main.h"
+#include "customer.h"
+#include "admin.h"
 
 int validname(char *p)
 {
