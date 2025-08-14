@@ -37,7 +37,7 @@ typedef struct {
 
 void initialize_user(User* user);
 void initialize_ticket(Ticket* ticket, bool withID);
-void initialize_seat(Seat* seat);
+void initialize_seat(Seat* seat, int number);
 
 bool customer(Booking_tickets* booking_tickets, UserDetails* ud);
 bool admin(Booking_tickets *Book, UserDetails *ud);//to prevent circular inclusion
@@ -56,10 +56,11 @@ void list_users(UserDetails *ud);
 void book_tickets(User* user, Booking_tickets* booking_tickets);//Book tickets
 void view_seats(Movies* movie);//View seats
 void select_seats(User* user, Movies* movie);//Select seats
-void pay_for_seats(User* user);//Pay for seats
+void pay_for_seats(User* user, Booking_tickets* booking_tickets, int movie_index);//Pay for seats
 void view_ticket(Ticket* ticket);//View ticket
+void view_booked_tickets(User* user);
 void select_movie(User* user,Booking_tickets* booking_tickets, int* movie);
-void edit_credentials(User* user);
+void edit_credentials(UserDetails *ud, User* user);
 
 int validname(char *p);
 int validemail(char* email);

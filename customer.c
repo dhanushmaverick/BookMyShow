@@ -32,7 +32,7 @@ void initialize_user_reg(User* user, char* first_name, char* last_name, char* nu
 
 void init_user_details(UserDetails *ud) 
 {
-    ud->users_capacity_ = 2; // start small
+    ud->users_capacity_ = 25; // start small
     ud->users_count_ = 0;
     ud->user_details = malloc(ud->users_capacity_ * sizeof(User));
     if (!ud->user_details) 
@@ -47,13 +47,22 @@ void initialize_ticket(Ticket* ticket, bool withID)
 {
     static int count = 1;
     if(withID)
-    ticket->ID_ = count++;
+    {
+        ticket->ID_ = count++;
+        ticket->isBooked_ = false;
+        initialize_ticket_seat(&ticket->seat_);
+        ticket->seat_.isEmpty_ = false;
+    return;
+    }
     else
     {
         ticket->ID_ = 0;
+        if(count!= 1)
         count--;
+        ticket->isBooked_ = false;
+        initialize_ticket_seat(&ticket->seat_);
     }
-    ticket->isBooked_ = false;
+    
 }
 
 
@@ -100,7 +109,7 @@ bool customer(Booking_tickets* booking_tickets, UserDetails* ud)
             printf("No tickets booked yet!\n");
             break;
             case 6:
-            edit_credentials(&user);
+            edit_credentials(ud,&user);
             break;
             case 7:
             printf("Thank you for using BookMyShow!\n");
@@ -127,12 +136,8 @@ void view_ticket(Ticket* ticket)
 
 void login_user(User* user, UserDetails* ud)
 { 
-     if (!user->isRegistered_)
-            {
-                printf("New users must register before attempting to login!\nPlease register yourself with us first.\n");
-                return;
-            }
-    if (user->isLoggedIn_)
+     
+    if (user->isLoggedIn_ || ud->user_details->isLoggedIn_)
     {
         printf("You are already logged in!\nPlease proceed to view/select/pay for seats.\n");
         return;
@@ -140,7 +145,15 @@ void login_user(User* user, UserDetails* ud)
 
     char username[100];
     char password[100];
-
+    printf("Do you already have an account? [Y/N]: ");
+    char opt[10];
+    getchar();
+    scanf("%[^\n]", opt);
+    if(!(strncmp(opt,"y",1) == 0|| strncmp(opt,"Y",1) == 0))
+    {
+        printf("Please register first before attempting to login!\n");
+        return;
+    }
     printf("Please Enter Your Username: ");
     getchar();
     scanf("%[^\n]", username);
@@ -154,15 +167,26 @@ void login_user(User* user, UserDetails* ud)
         if (strcmp(ud->user_details[i].username_, username) == 0 &&
             strcmp(ud->user_details[i].password_, password) == 0)
         {
-           
-            printf("You Logged in Successfully!\n");
+            if(ud->user_details[i].isRegistered_ != true)
+            {
+                printf("Invalid Username or Password.\nPlease register first before attempting to login!\n");
+                return;
+            }
+            initialize_user_reg(user, 
+            ud->user_details[i].first_name_, 
+            ud->user_details[i].last_name_,  
+            ud->user_details[i].number_, 
+            ud->user_details[i].email_,
+            ud->user_details[i].username_, 
+            ud->user_details[i].password_);
             user->isLoggedIn_ = true;
             ud->user_details[i].isLoggedIn_ = true;
+            printf("You Logged in Successfully!\n");
             return; 
         }
     }
 
-    // If we reach here, no match was found
+    //no match was found
     printf("Invalid Username or Password\nNote: Username is firstname + lastname + ID without spaces\nPlease Try Again\n");
 }
 
@@ -176,6 +200,11 @@ void register_user(User* user, UserDetails* ud)
     //call initialize_user_reg
     ensure_capacity(ud);
     //User *ud = &ud->user_details[ud->users_count_];
+    if (user->isLoggedIn_ || ud->user_details->isLoggedIn_)
+    {
+        printf("You are already logged in!\nPlease proceed to view/select/pay for seats.\n");
+        return;
+    }
 
     read_firstname:
     printf("Please Enter Your First Name: ");
@@ -275,8 +304,8 @@ void list_users(UserDetails *ud) //read from file instead of this
 void view_seats(Movies* movie)//View seats
 {
     printf("Seat Number = count from left to right, increasing as you go lower\n");
-    printf("* = Unoccupied Seat\nX = Occupied Seat\n\n");
-    printf("0 1 2 3 4 5 6 7 8 9...\n");
+    printf("* = Unoccupied Seat\nX = Selected/Occupied Seat\n\n");
+    printf("1 2 3 4 5 6 7 8 9 10...\n");
     for(int i = 1; i < 6; i++)
     {
         for(int j = 0; j < 10; j++)
@@ -308,19 +337,40 @@ void select_seats(User* user, Movies* movie)//Select seats
     view_seats(movie);
     for(int i = 0; i < MAX_TICKETS_; i++)
     {
-        for(int j = 0; j < MAX_SEATS_; j++)
-        {
-            if(movie->seats_[j].number_ == user->tickets_[i].seat_.number_)
+        if (user->tickets_[i].seat_.isEmpty_ == true)
+        continue;
+        // for(int j = 0; j < MAX_SEATS_; j++)
+        // {
+        //     if(movie->seats_[j].number_ == user->tickets_[i].seat_.number_)//&& movie->seats_[j].number_ != 0)
+        //     {
+        //         initialize_seat(&movie->seats_[j]);
+        //         initialize_ticket(&user->tickets_[i], false);
+        //     }
+        // }
+         int seat_no = user->tickets_[i].seat_.number_;
+            if(seat_no > 0 && seat_no <= MAX_SEATS_)
             {
-                initialize_seat(&movie->seats_[j]);
-                initialize_ticket(&user->tickets_[i], false);
+                // Mark the seat as available again
+                initialize_seat(&movie->seats_[seat_no - 1], seat_no);
             }
-        }
+            // Clear the user's ticket
+            initialize_ticket(&user->tickets_[i], false);
     }
     printf("How many tickets would you like to purchase?\n");
     int tickets = 1;
     int result;
     char ch;
+    int user_max_tickets = 0;
+    int user_first_ticket = 0;
+    for(int i = 0; i < MAX_TICKETS_; i++)
+    {
+        if(user->tickets_[i].seat_.isEmpty_ == true)
+        {
+            i = user_first_ticket;
+            user_max_tickets = MAX_TICKETS_-i-1;
+            break;
+        }
+    }
     do {
         printf("Number of tickets: ");
         result = scanf("%d", &tickets);
@@ -329,7 +379,7 @@ void select_seats(User* user, Movies* movie)//Select seats
             printf("Seat selection terminated since 0 tickets selected.\n");
             return;
         }
-        if (result != 1 || tickets > MAX_TICKETS_ || tickets <= 0) {
+        if (result != 1 || tickets > user_max_tickets|| tickets <= 0) {
             printf("Invalid input. Please enter a valid number of tickets, max is 10 per person.\n");
             // Clear input buffer
             while ((ch = getchar()) != '\n' && ch != EOF);
@@ -345,8 +395,24 @@ void select_seats(User* user, Movies* movie)//Select seats
             printf("Seat %d: ", i+1);
             int no = 0;
             valid = scanf("%d", &no);
-            if((valid != 1) || (no > MAX_SEATS_) || (no < 1) || (movie->seats_[no-1].isEmpty_ == false))
+            bool same_seat_error = false;
+            for(int j = 0; j < i; j++)
             {
+                if(user->tickets_[j].seat_.number_ == no)
+                {
+                    same_seat_error = true;
+                    break;
+                }
+                else
+                {
+                    same_seat_error = false;
+                }
+            }
+            if((valid != 1) || (no > MAX_SEATS_) || (no < 1) || (movie->seats_[no-1].isEmpty_ == false) || same_seat_error == true)
+            {
+                if(same_seat_error == true)
+                printf("Please select different seats for each ticket! Cannot book same seat twice.\n");
+                else
                 printf("Invalid input. Please enter a valid unoccupied seat number.\n");
                 // Clear input buffer
                 while ((ch = getchar()) != '\n' && ch != EOF);
@@ -357,7 +423,8 @@ void select_seats(User* user, Movies* movie)//Select seats
                 initialize_ticket(&user->tickets_[count], true);
                 movie->seats_[no-1].isEmpty_ = false;
                 user->tickets_[count].movie_ = *movie;
-                user->tickets_[count++].seat_ = movie->seats_[no-1];
+                user->tickets_[count].seat_.number_ = no;
+                user->tickets_[count++].seat_.isEmpty_ = false;
                 valid = 1;
             }
         }
@@ -366,7 +433,7 @@ void select_seats(User* user, Movies* movie)//Select seats
     printf("Selection Confirmed. You can now proceed to checkout if you'd like.\n");
     return;
 }
-void pay_for_seats(User* user)//Pay for seats
+void pay_for_seats(User* user, Booking_tickets* booking_tickets, int movie_index)
 {
     if(user->isRegistered_ == false)
     {
@@ -378,28 +445,46 @@ void pay_for_seats(User* user)//Pay for seats
         printf("Please login first in order to pay!\n");
         return;
     }
-    int i = 0;
+    int user_first_ticket = 0;
     double cost = 0.0;
-    for(i = 0; i < MAX_TICKETS_; i++)
+    for(user_first_ticket = 0; user_first_ticket < MAX_TICKETS_; user_first_ticket++)
     {
-        if(!user->tickets_[i].isBooked_)
+        if(!user->tickets_[user_first_ticket].isBooked_)
         break;
-        printf("Ticket ID: %d",user->tickets_[i].ID_);
-        printf("Movie Name: %s",user->tickets_[i].movie_.movie_name);
-        printf("Ticket Price: %lf",user->tickets_[i].movie_.price);
-        cost+= user->tickets_[i].movie_.price;
-        user->tickets_[i].isBooked_ = true;
     }
-    if(i == 0)
+    if(user_first_ticket == 0 && user->tickets_[user_first_ticket].seat_.isEmpty_ == true)
     {
-        printf("You haven't selected any seats yet! Please come back after selecting the seats.");
+        printf("You haven't selected any seats yet! Please come back after selecting the seats.\n");
         return;
     }
+    int tickets = 0;
+    for(int i = user_first_ticket; i < MAX_TICKETS_; i++)
+    {
+        if(user->tickets_[i].seat_.isEmpty_ == false && user->tickets_[i].seat_.number_ != 0)
+        {
+            tickets++;
+            printf("Ticket ID: %d\n",user->tickets_[i].ID_);
+            printf("Movie Name: %s\n",user->tickets_[i].movie_.movie_name);
+            printf("Ticket Price: %lf\n",user->tickets_[i].movie_.price);
+            cost+= user->tickets_[i].movie_.price;
+            user->tickets_[i].isBooked_ = true;
+            printf("Seat Number: %d\n", user->tickets_[i].seat_.number_);
 
-    printf("Number of tickets being purchased: %d", i+1);
-    printf("Total Cost: %lf", cost);
-    printf("Please make the payment at the theater before your movie.\nThe ticket price is displayed on the ticket.");
+            // --- Update the main Booking_tickets seats array ---
+            int seat_no = user->tickets_[i].seat_.number_;
+            if(seat_no > 0 && seat_no <= MAX_SEATS_)
+                booking_tickets->booking_movie[movie_index].seats_[seat_no-1].isEmpty_ = false;
+        }
+        else
+        break;
+    }
+    printf("Number of tickets being purchased: %d\n", tickets);
+    printf("Total Cost: %lf\n", cost);
+    printf("Tickets successfully booked!\nPlease make the payment at the theater before your movie.\nThe ticket price is displayed on the ticket.\n");
     printf("Thank you for your purchase!\nWe wish you a great time at the cinemas :)\n");
+
+    // --- Save the updated movie data to file ---
+    save_movie_file(booking_tickets);
 }
 
 void book_tickets(User* user, Booking_tickets* booking_tickets)
@@ -417,8 +502,9 @@ void book_tickets(User* user, Booking_tickets* booking_tickets)
             printf("1. View Seats\n");
             printf("2. Select/Change Seats\n");
             printf("3. Proceed to payment\n");
-            printf("4. Select different movie\n");
-            printf("5. Return to Main menu\n");
+            printf("4. View Selected Seats Details\n");
+            printf("5. Select different movie\n");
+            printf("6. Return to Main menu\n");
             printf("Input: ");
             scanf("%d", &option);
             switch(option)
@@ -430,12 +516,15 @@ void book_tickets(User* user, Booking_tickets* booking_tickets)
                 select_seats(user,&booking_tickets->booking_movie[movie_number]);
                 break;
                 case(3):
-                pay_for_seats(user);
+                pay_for_seats(user, booking_tickets, movie_number); // <-- pass movie_number
                 break;
                 case(4):
-                select_movie(user, booking_tickets, &movie_number);
+                view_booked_tickets(user);
                 break;
                 case(5):
+                select_movie(user, booking_tickets, &movie_number);
+                break;
+                case(6):
                 booked = true;
                 return;
                 default:
@@ -473,93 +562,129 @@ void select_movie(User* user,Booking_tickets* booking_tickets, int* movie)
     return;
 }
 
-void edit_credentials(User* user)
+void edit_credentials(UserDetails* ud, User* currentUser) 
 {
-    if(user->isRegistered_ == false)
-    {
-        printf("Please register and login before trying to view/edit your credentials!\n");
-        return;
+    // Find the index of the logged-in user
+    int j = -1;
+    for (int i = 0; i < ud->users_count_; i++) {
+        if (ud->user_details[i].isLoggedIn_ &&
+            strcmp(ud->user_details[i].username_, currentUser->username_) == 0 &&
+            strcmp(ud->user_details[i].password_, currentUser->password_) == 0) 
+        {
+            j = i;
+            break;
+        }
     }
-    else if(user->isLoggedIn_ == false)
-    {
+
+    if (j == -1) {
         printf("Please login first in order to view/edit credentials!\n");
         return;
     }
-    printf("---User Credentials---\n");
-    printf("Name:%-20s %-1s Phone Number: %-20s Email: %-20s Username: %-20s Password: %-20s\n",
-               user->first_name_,
-               user->last_name_,
-               user->number_,
-               user->email_,
-               user->username_,
-               user->password_);
-               int result = 0;
-    do {
-            int option = 0;
-            printf("Options:\n");
-            //ask for password before editing
-            printf("1. Edit first name\n");
-            printf("2. Edit last name\n");
-            printf("3. Edit phone number\n");
-            printf("4. Edit email ID\n");
-            printf("5. Edit username\n");
-            printf("6. Edit password\n");
-            printf("7. Return to Main Menu\n");
-            printf("Input: ");
-            scanf("%d", &option);
-            switch(option)
-            {
-                case(1):
-                //first name
-                read_ref_name:
-                printf("Enter your Firstname(Current: %s): ", user->first_name_);
-                getchar();
-                scanf("%[^\n]", user->first_name_);
-                if(!validname(user->first_name_)) //function call of validating name
-                {
-                    printf("Invalid name\nEnter only characters\n");
-                    goto read_ref_name; // if invalid, continue to re-enter
-                }
-                printf("First name successfully changed to %s .\n",user->first_name_);
-                break;
-                case(2):
-                //last name
-                read_rel_name:
-                printf("Enter your Lastname(Current: %s): ", user->last_name_);
-                getchar();
-                scanf("%[^\n]", user->last_name_);
-                if(!validname(user->last_name_)) //function call of validating name
-                {
-                    printf("Invalid name\nEnter only characters\n");
-                    goto read_ref_name;; // if invalid, continue to re-enter
-                }
 
-                printf("Last name successfully changed to %s .\n",user->last_name_);
+    printf("---User Credentials---\n");
+    printf("Username: %s\n", ud->user_details[j].username_);
+    printf("Password: %s\n", ud->user_details[j].password_);
+    printf("First Name: %s\n", ud->user_details[j].first_name_);
+    printf("Last Name: %s\n", ud->user_details[j].last_name_);
+    printf("Phone Number: %s\n", ud->user_details[j].number_);
+    printf("Email ID: %s\n", ud->user_details[j].email_);
+    printf("Registration Status: %d\n", ud->user_details[j].isRegistered_);
+    printf("Logged In Status: %d\n", ud->user_details[j].isLoggedIn_);
+    printf("ID: %d\n", ud->user_details[j].ID_);
+    printf("You can now edit your credentials.\n");
+
+    int result = 0;
+    do {
+        int option = 0;
+        printf("\nOptions:\n");
+        printf("1. Edit first name\n");
+        printf("2. Edit last name\n");
+        printf("3. Edit phone number\n");
+        printf("4. Edit email ID\n");
+        printf("5. Edit username\n");
+        printf("6. Edit password\n");
+        printf("7. Save and Return to Main Menu\n");
+        printf("Input: ");
+        scanf("%d", &option);
+        getchar(); // clear newline
+
+        switch (option) {
+            case 1:
+                do {
+                    printf("Enter your First Name (Current: %s): ", ud->user_details[j].first_name_);
+                    scanf("%[^\n]", ud->user_details[j].first_name_);
+                    getchar();
+                } while (!validname(ud->user_details[j].first_name_));
+                printf("First name updated.\n");
                 break;
-                case(3):
-                //phone
-                printf("Phone Number successfully changed to %s .\n",user->number_);
+
+            case 2:
+                do {
+                    printf("Enter your Last Name (Current: %s): ", ud->user_details[j].last_name_);
+                    scanf("%[^\n]", ud->user_details[j].last_name_);
+                    getchar();
+                } while (!validname(ud->user_details[j].last_name_));
+                printf("Last name updated.\n");
                 break;
-                case(4):
-                //email
-                printf("Email ID successfully changed to %s .\n",user->email_);
-                case(5):
-                //username
-                printf("Username successfully changed to %s .\n",user->username_);
+
+            case 3:
+                do {
+                    printf("Enter your Phone Number (Current: %s): ", ud->user_details[j].number_);
+                    scanf("%[^\n]", ud->user_details[j].number_);
+                    getchar();
+                } while (!validphone(ud->user_details[j].number_));
+                printf("Phone number updated.\n");
                 break;
-                case(6):
-                //password
-                printf("Password successfully changed to %s .\n",user->password_);
+
+            case 4:
+                do {
+                    printf("Enter your Email ID (Current: %s): ", ud->user_details[j].email_);
+                    scanf("%[^\n]", ud->user_details[j].email_);
+                    getchar();
+                } while (!validemail(ud->user_details[j].email_));
+                printf("Email updated.\n");
                 break;
-                case(7):
+
+            case 5:
+                snprintf(ud->user_details[j].username_, sizeof(ud->user_details[j].username_), 
+                         "%s%s%d",
+                         ud->user_details[j].first_name_, 
+                         ud->user_details[j].last_name_, 
+                         ud->user_details[j].ID_);
+                printf("Username updated to %s.\n", ud->user_details[j].username_);
+                break;
+
+            case 6:
+                printf("Enter your new Password: ");
+                scanf("%[^\n]", ud->user_details[j].password_);
+                getchar();
+                printf("Password updated.\n");
+                break;
+
+            case 7:
                 printf("User details saved.\n");
+                save_user_file(ud);
                 result = 1;
-                return;
-                default:
-                printf("Invalid input. Please enter a valid choice.\n");
-                result = 0;
                 break;
-            }
-        } while (result != 1);
+
+            default:
+                printf("Invalid choice. Try again.\n");
+        }
+
+    } while (result != 1);
 }
 
+void view_booked_tickets(User* user)
+{
+    int i = 0;
+    while(user->tickets_[i].isBooked_ == true)
+    {
+        view_ticket(&user->tickets_[i++]);
+        printf("\n");
+    }
+    if(i == 0)
+    {
+        printf("No tickets have been booked yet!\nPlease proceed to payment after selecting your seats in order to bool tickets.\n");
+        return;
+    }
+}

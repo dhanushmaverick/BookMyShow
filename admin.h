@@ -45,6 +45,7 @@ void load_from_file(Booking_tickets *Book);//load movies to file
 void initialize(Booking_tickets *Book); //intilizing the file to load from the file
 void valid_price(Booking_tickets *Book, int index);
 
-void initialize_seat(Seat* seat);
+//void initialize_seat(Seat* seat, int number);
+void initialize_ticket_seat(Seat* seat);
 
 #endif

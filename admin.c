@@ -28,6 +28,7 @@ bool admin(Booking_tickets *Book, UserDetails *ud)
         switch (choice) {
             case 1:
                 create_movie(Book);
+                save_movie(Book);
                 printf("\n");
                 break;
             case 2:
@@ -53,6 +54,7 @@ bool admin(Booking_tickets *Book, UserDetails *ud)
                 printf("Saving and Exiting...\n");
                 printf("Exit Successful.\n");
                 save_movie(Book);
+                exit(EXIT_SUCCESS);
             break;
             default:
                 printf("Invalid choice. Please try again.\n");
@@ -124,7 +126,7 @@ void create_movie(Booking_tickets *Book)//create movie function decleration
     
     for(int i = 0; i < MAX_SEATS_; i++)
     {
-        initialize_seat(&(Book->booking_movie[size].seats_[i]));
+        initialize_seat(&(Book->booking_movie[size].seats_[i]),i+1);
     }
     Book->movies_count++;
 
@@ -192,7 +194,7 @@ void edit_movie(Booking_tickets *book)
     scanf("%lf",&book->booking_movie[editindex].price);//reading the email_id from the user
     
     printf("Movie updated successfully\n");
-
+    save_movie(book); // Save updated movie details to file
 }
 
 
@@ -244,6 +246,7 @@ void delete_movie(Booking_tickets *Book)
         Book->booking_movie[i] = Book->booking_movie[i + 1];
     }
     Book->movies_count--;//decreasing the movie count
+    save_movie(Book); // Save updated movie details to file
     printf("Movie deleted successfully.\n");
 }
 
@@ -258,20 +261,38 @@ void list_movies(Booking_tickets * book)
     {
         printf("----------------------------Movie List---------------------------\n");
         //if movie count is not zero then it prints movies
-        printf("%-5s %-30s %-15s %-10s\n", "S.No", "Movie Name", "Time", "Price");
+        printf("%-5s %-30s %-15s %-10s %-10s %-15s %-15s\n", "S.No", "Movie Name", "Time", "Price", "Total Seats", "Booked Seats", "Booked Seat Numbers");
         printf("-----------------------------------------------------------------\n");
         for (int i = 0; i < book->movies_count; i++) 
         {
+            int booked_seats_count = 0;
             printf("%-5d", i + 1);
             printf(" %-30s", book->booking_movie[i].movie_name);
             printf(" %-15s", book->booking_movie[i].movie_time);
-            printf(" %-10.3lf", book->booking_movie[i].price);
+            printf(" %-10.2lf", book->booking_movie[i].price);
+            printf(" %-10d", MAX_SEATS_);
+            for(int j = 0; j < MAX_SEATS_; j++)
+            {
+                if(book->booking_movie[i].seats_[j].isEmpty_ == false)
+                {
+                    booked_seats_count++;
+                }
+            }
+            printf(" %-15d", booked_seats_count);
+            
+            for(int j = 0; j < MAX_SEATS_; j++)
+            {
+                if(book->booking_movie[i].seats_[j].isEmpty_ == false)
+                {
+                    printf(" %-15d ", book->booking_movie[i].seats_[j].number_);
+                }
+            }
+            
             printf("\n");
         }
         printf("-----------------------------------------------------------------\n");
     }
 }
-
 
 
 void print_movie(Movies* movie)
@@ -285,7 +306,7 @@ void print_movie(Movies* movie)
 void save_movie(Booking_tickets * Book)
 {
     save_movie_file(Book); // Save movies to file
-    exit(EXIT_SUCCESS); // Exit the program
+    //exit(EXIT_SUCCESS); // Exit the program
 }
 
 void initialize(Booking_tickets * Book) 
@@ -295,10 +316,15 @@ void initialize(Booking_tickets * Book)
     load_from_file(Book);
 }
 
-void initialize_seat(Seat* seat)
+void initialize_seat(Seat* seat, int number)
 {
-    static int count = 1;
-    seat->number_ = count++;
+    //static int count = 1;
+    seat->number_ = number;
+    seat->isEmpty_ = true;
+}
+void initialize_ticket_seat(Seat* seat)
+{
+    seat->number_ = 0;
     seat->isEmpty_ = true;
 }
 
@@ -313,30 +339,71 @@ void save_movie_file(Booking_tickets *Book) //save to file definition
     for (int i = 0; i < Book->movies_count ;i++) 
     {
         //printing  in the file 
-        fprintf(fptr, "%s,%s,%lf\n", Book->booking_movie[i].movie_name,Book->booking_movie[i].movie_time,Book->booking_movie[i].price);
+        int booked_seats_count = 0;
+        for(int j = 0; j < MAX_SEATS_; j++)
+        {
+            if(Book->booking_movie[i].seats_[j].isEmpty_ == false)
+            {
+                booked_seats_count++;
+            }
+        }
+        fprintf(fptr, "%s,%s,%lf,%d,", Book->booking_movie[i].movie_name,
+            Book->booking_movie[i].movie_time,
+            Book->booking_movie[i].price,
+            booked_seats_count);
+        for(int j = 0; j < MAX_SEATS_; j++)
+        {
+            if(Book->booking_movie[i].seats_[j].isEmpty_ == false)
+            {
+                fprintf(fptr, "%d ", Book->booking_movie[i].seats_[j].number_);
+            }
+        }
+        fprintf(fptr, "\n");
     }
     fclose(fptr);//closing the file
     printf("movies saved to file successfully\n");//printing the statment that movies are saved to file successfully
 }
 
-void load_from_file(Booking_tickets *Book)//load movies to file function definition 
+void load_from_file(Booking_tickets *Book)
 {
-    FILE* fptr = fopen("movies.csv","r");//opening the file in read format
+    FILE* fptr = fopen("movies.csv","r");
     if (!fptr) 
     {
-        printf("Error opening file for reading\n");//printing error opening if file doesn't opened
+        printf("Error opening file for reading\n");
+        return;
     }
     fscanf(fptr,"#%d\n",&Book->movies_count);
     for (int i = 0; i < Book->movies_count; i++) 
     {
+        int booked_count = 0;
+        char line[1024];
+        fgets(line, sizeof(line), fptr);
+        char *token = strtok(line, ",");
+        strcpy(Book->booking_movie[i].movie_name, token);
+        token = strtok(NULL, ",");
+        strcpy(Book->booking_movie[i].movie_time, token);
+        token = strtok(NULL, ",");
+        Book->booking_movie[i].price = atof(token);
+        token = strtok(NULL, ",");
+        booked_count = atoi(token);
 
-        fscanf(fptr, "%[^,],",Book->booking_movie[i].movie_name);
-        fscanf(fptr, "%[^,],", Book->booking_movie[i].movie_time);
-        fscanf(fptr, "%lf\n", &Book->booking_movie[i].price);
+        // Initialize all seats as empty
+        for(int j = 0; j < MAX_SEATS_; j++)
+            initialize_seat(&(Book->booking_movie[i].seats_[j]), j + 1);
+
+        // Read booked seat numbers
+        token = strtok(NULL, "\n");
+        if(token && booked_count > 0) {
+            int seat_no;
+            char *seat_token = strtok(token, " ");
+            while(seat_token) {
+                seat_no = atoi(seat_token);
+                if(seat_no > 0 && seat_no <= MAX_SEATS_)
+                    Book->booking_movie[i].seats_[seat_no-1].isEmpty_ = false;
+                seat_token = strtok(NULL, " ");
+            }
+        }
     }
-    fclose(fptr);//closing the file
+    fclose(fptr);
     printf("Movies loaded from file successfully\n");
 }
-
-
-

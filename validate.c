@@ -78,7 +78,6 @@ void load_from_userfile(UserDetails *user)
         return;
     }
     fscanf(fptr, "#%d\n", &user->users_count_);
-    ensure_capacity(user);
     for (int i = 0; i < user->users_count_; i++) {
         fscanf(fptr, "%[^,],", user->user_details[i].first_name_);
         fscanf(fptr, "%[^,],", user->user_details[i].last_name_);
@@ -104,11 +103,12 @@ void save_user_file(UserDetails *user)
     fprintf(fptr, "#%d\n", user->users_count_);
     for (int i = 0; i < user->users_count_; i++) 
     {
-        fprintf(fptr, "%s,%s,%s,%s,%s,%s\n",
+        fprintf(fptr, "%s,%s,%s,%s,%s,%s,%d,%d\n",
                 user->user_details[i].first_name_,user->user_details[i].last_name_,user->user_details[i].number_,
                 user->user_details[i].email_,user->user_details[i].username_,user->user_details[i].password_);
     }
     fclose(fptr);
+    
     printf("User data saved successfully.\n");
 }
 
