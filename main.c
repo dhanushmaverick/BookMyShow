@@ -18,7 +18,7 @@ int main()
     bool status = false;
     int choice;
     printf("---------------Main Menu---------------\n");
-    printf("1.Admin\n2.Customer\n3.Exit\nEnter your Choice: ");
+    printf("1. Admin\n2. Customer\n3. Exit\nEnter your Choice: ");
     scanf("%d", &choice);
     switch(choice) 
     {

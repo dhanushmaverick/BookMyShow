@@ -307,22 +307,37 @@ void list_users(UserDetails *ud) //read from file instead of this
 
 void view_seats(Movies* movie)//View seats
 {
-    printf("Seat Number = count from left to right, increasing as you go lower\n");
-    printf("* = Unoccupied Seat\nX = Selected/Occupied Seat\n\n");
-    printf("1 2 3 4 5 6 7 8 9 10...\n");
-    for(int i = 1; i < 6; i++)
-    {
-        for(int j = 0; j < 10; j++)
-        {
-            if(movie->seats_[((i-1)*10)+j].isEmpty_ == true)
-            printf("* ");
-            else
-            printf("X ");
-        }
-        printf("%d\n", (i*10));
-    }
+    // Curved screen effect
     printf("\n");
-    printf("Please proceed to selecting your seats.\n");
+    printf("         ______________________________\n");
+    printf("        /                              \\\n");
+    printf("       /                                \\\n");
+    printf("      /             SCREEN               \\\n");
+    printf("     /====================================\\\n");
+    printf("\n");
+
+    // Column numbers
+    printf("        ");
+    for (int col = 1; col <= 10; col++)
+        printf("%2d ", col);
+    printf("\n");
+
+    // Rows A-E, 5 rows, 10 seats each
+    for (int row = 0; row < 5; row++)
+    {
+        printf("     %d  ", 10 * row+1);
+        for (int col = 0; col < 10; col++)
+        {
+            int idx = row * 10 + col;
+            if (movie->seats_[idx].isEmpty_ == true)
+                printf(" * ");
+            else
+                printf(" X ");
+        }
+        printf("\n");
+    }
+    printf("\n* = Unoccupied Seat   X = Occupied Seat\n\n");
+    printf("Please proceed to selecting your seats (e.g., A1, B5, etc.).\n");
 }
 
 void select_seats(User* user, Movies* movie)//Select seats
@@ -486,7 +501,7 @@ void pay_for_seats(User* user, Booking_tickets* booking_tickets, int movie_index
 
     printf("%-20d---->%-20.2lf\n", tickets, cost);
     // printf("Number of tickets being purchased: %d\n", tickets);
-    // printf("Total Cost: %lf\n", cost);
+    // printf("Total Cost: %lf", cost);
     printf("Tickets successfully booked!\nPlease make the payment at the theater before your movie.\nThe ticket price is displayed on the ticket.\n");
     printf("Thank you for your purchase!\nWe wish you a great time at the cinemas :)\n");
 
