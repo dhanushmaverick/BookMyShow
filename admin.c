@@ -1,4 +1,8 @@
-
+//-forgot username/password --> ask mobile/email  ---> display username, pass
+//-edit user credentials ///
+//-add occupied seats and available number of seats to csv
+//-in saving and loading, take care of occcupied seats logic
+//-users csv must save details
 
 #include "admin.h"
 #include "customer.h"
@@ -6,6 +10,7 @@
 bool admin(Booking_tickets *Book, UserDetails *ud)
 {
     //system("cls");
+   // init_user_details(ud);
     int choice;
     do
     {
@@ -332,5 +337,6 @@ void load_from_file(Booking_tickets *Book)//load movies to file function definit
     fclose(fptr);//closing the file
     printf("Movies loaded from file successfully\n");
 }
+
 
 

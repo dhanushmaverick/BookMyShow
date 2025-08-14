@@ -22,7 +22,7 @@ int validname(char *p)
         return 0;//else returning 0
     }
 }
-int validemail(char* email, User *user)
+int validemail(char* email)
 {
     char* at = strchr(email, '@');//intilizing  @ and .com
     char* dot = strstr(email, ".com");
@@ -40,7 +40,7 @@ int validemail(char* email, User *user)
 }
 
 
-int validphone(char *phone, User *user)
+int validphone(char *phone)
 {
     if (phone == NULL || strlen(phone) != 10) return 0;
 
@@ -56,43 +56,17 @@ int validphone(char *phone, User *user)
 
 
 
-void list_users(UserDetails *ud) 
-{
-    if (ud->users_count_ == 0) 
-    {
-        printf("No Users Found\n");
-        return;
-    }
-    printf("------------------------------------------------------------------Users List-----------------------------------------------------------------\n");
-    printf("%-5s %-20s %-20s %-20s %-20s %-20s %-20s %-20s\n", 
-           "S.No", "Firstname", "Lastname", "Number", "Email ID", "Username", "Password", "Registration");
-    printf("---------------------------------------------------------------------------------------------------------------------------------------------\n");
-    for (int i = 0; i < ud->users_count_; i++) 
-    {
-        printf("%-5d %-20s %-20s %-20s %-20s %-20s %-20s %-20d\n",
-               i + 1,
-               ud->user_details[i].first_name_,
-               ud->user_details[i].last_name_,
-               ud->user_details[i].number_,
-               ud->user_details[i].email_,
-               ud->user_details[i].username_,
-               ud->user_details[i].password_,
-               ud->user_details[i].isRegistered_);
-    }
-    printf("---------------------------------------------------------------------------------------------------------------------------------------------\n");
-}
-
 // void save_user(User *user)
 // {
 //     save_user_file(user); // Save movies to file
 //     //exit(EXIT_SUCCESS); // Exit the program
 // }
 
-// void initialize_users_start(User *user)
-// {
-//     user->ID_ = 0;
-//     load_from_userfile(user);
-// }
+void initialize_users_start(UserDetails *user)
+{
+    user->user_details->ID_ = 0;
+    load_from_userfile(user);
+}
 
 
 void load_from_userfile(UserDetails *user)
