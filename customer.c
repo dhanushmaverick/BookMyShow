@@ -322,7 +322,7 @@ void view_seats(Movies* movie)//View seats
         printf("%2d ", col);
     printf("\n");
 
-    // Rows A-E, 5 rows, 10 seats each
+    // 5 rows, 10 seats each
     for (int row = 0; row < 5; row++)
     {
         printf("     %d  ", 10 * row+1);
@@ -337,7 +337,7 @@ void view_seats(Movies* movie)//View seats
         printf("\n");
     }
     printf("\n* = Unoccupied Seat   X = Occupied Seat\n\n");
-    printf("Please proceed to selecting your seats (e.g., A1, B5, etc.).\n");
+    printf("Please proceed to selecting your seats (e.g., 1, 2, 3, etc.).\n");
 }
 
 void select_seats(User* user, Movies* movie)//Select seats
