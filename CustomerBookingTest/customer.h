@@ -42,12 +42,12 @@ void initialize_seat(Seat* seat);
 bool customer(Booking_tickets* booking_tickets, UserDetails* ud);
 bool admin(Booking_tickets *Book, UserDetails *ud);//to prevent circular inclusion
 
-void initialize_users_start(User *user);
-void login_user(UserDetails* ud);//Login user
-void register_user(UserDetails* ud);//Register user
-void save_user_file(UserDetails *user); //saving the user details function decleration
+void initialize_users_start(UserDetails *user);
+void login_user(User* user,UserDetails* ud);//Login user
+void register_user(User* user,UserDetails* ud);//Register user
+void save_user_file(UserDetails *ud); //saving the user details function decleration
 void list_users(UserDetails *ud);
-void load_from_userfile(UserDetails *user);//loading users to file function definition
+void load_from_userfile(UserDetails *ud);//loading users to file function definition
 void ensure_capacity(UserDetails *ud);
 void init_user_details(UserDetails *ud);//
 void list_users(UserDetails *ud);
@@ -62,8 +62,8 @@ void select_movie(User* user,Booking_tickets* booking_tickets, int* movie);
 void edit_credentials(User* user);
 
 int validname(char *p);
-int validemail(char* email, User *user);
-int validphone(char *phone, User *user);
+int validemail(char* email);
+int validphone(char *phone);
 //Exit program
 
 

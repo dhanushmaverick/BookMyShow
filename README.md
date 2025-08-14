@@ -5,7 +5,7 @@ Project using C in order to gain practice while trying to replicate BookMyShow's
 
 **Tasks:**
 
-1. Read from file for list_users()
+1. Read from file for list_users() //pending
 2. Unoccupied and occupied seat
 3. forgot username/password --> ask mobile/email  ---> display username, pass
 4. edit user credentials 
@@ -16,3 +16,6 @@ Project using C in order to gain practice while trying to replicate BookMyShow's
 Dhanush Tasks:
 -debug payment post selection
 -debug and test tickets
+
+**DONE**
+-fix login logic 

@@ -9,6 +9,7 @@ void initialize_user(User* user)
     strcpy(user->number_ ,"\0");
     strcpy(user->email_ ,"\0");
     strcpy(user->password_ ,"\0");
+    strcpy(user->username_ ,"\0");
     user->ID_ = count++;
     user->isRegistered_ = false;
     for(int i = 0; i < MAX_TICKETS_; i++)
@@ -16,13 +17,14 @@ void initialize_user(User* user)
     user->isLoggedIn_ = false;
 }
 
-void initialize_user_reg(User* user, char* first_name, char* last_name, char* number, char* email, char* password)
+void initialize_user_reg(User* user, char* first_name, char* last_name, char* number, char* email,char* username, char* password)
 {
     strcpy(user->first_name_ ,first_name);
     strcpy(user->last_name_ ,last_name);
     strcpy(user->number_,number);
     strcpy(user->email_,email);
     strcpy(user->password_, password);
+    strcpy(user->username_, username);
     user->isLoggedIn_ = false;
     user->isRegistered_ = true;
 }
@@ -79,10 +81,10 @@ bool customer(Booking_tickets* booking_tickets, UserDetails* ud)
 
         switch (choice) {
             case 1:
-            login_user(&user, ud);//Login user
+            login_user(&user,ud);//Login user
             break;
             case 2:
-            register_user(&user, ud);//register new user
+            register_user(&user,ud);//register new user
             break;
             case 3:
             list_movies(booking_tickets);
@@ -111,7 +113,7 @@ bool customer(Booking_tickets* booking_tickets, UserDetails* ud)
             printf("Invalid choice. Please try again.\n");
         }
     } 
-    while (choice != 5);
+    while (choice != 7);
 
 }
 
@@ -123,58 +125,77 @@ void view_ticket(Ticket* ticket)
     print_movie(&(ticket->movie_));
 }
 
-void login_user(User* user,UserDetails* ud)
-{
-    if(user->isRegistered_ == false)
-    {
-        printf("New users must register before attempting to login!\nPlease register yourself with us first.\n");
-        return;
-    }
-    if(user->isLoggedIn_ == true)
+void login_user(User* user, UserDetails* ud)
+{ 
+     
+    if (user->isLoggedIn_)
     {
         printf("You are already logged in!\nPlease proceed to view/select/pay for seats.\n");
+        return;
     }
-    //username is users firstname+lastname+ID without space
+
     char username[100];
     char password[100];
+    printf("Do you already have an account? [Y/N]: ");
+    char opt[10];
+    getchar();
+    scanf("%[^\n]", opt);
+    if(!(strcmp(opt,"y") == 1|| strcmp(opt,"Y") == 1))
+    {
+        printf("Please register first before attempting to login!\n");
+        return;
+    }
     printf("Please Enter Your Username: ");
     getchar();
     scanf("%[^\n]", username);
+
     printf("Please Enter Your Password: ");
     getchar();
     scanf("%[^\n]", password);
-    for(int i = 0; i < ud->users_count_; i++)
+
+    for (int i = 0; i < ud->users_count_; i++)
     {
-        if(strcmp(ud->user_details[i].username_, username) == 0 && strcmp(ud->user_details[i].password_, password) == 0)
+        if (strcmp(ud->user_details[i].username_, username) == 0 &&
+            strcmp(ud->user_details[i].password_, password) == 0)
         {
-            printf(" You Logged in Successfully!\n");
-            return;
-        }
-        else
-        {
-            printf("Invalid Username or Password\nNote: Username is firstname + lastname + ID without spaces\nPlease Try Again\n");
-            return;
+            if(ud->user_details[i].isRegistered_ != true)
+            {
+                printf("Invalid Username or Password.\nPlease register first before attempting to login!\n");
+                return;
+            }
+            initialize_user_reg(user, 
+            ud->user_details[i].first_name_, 
+            ud->user_details[i].last_name_,  
+            ud->user_details[i].number_, 
+            ud->user_details[i].email_,
+            ud->user_details[i].username_, 
+            ud->user_details[i].password_);
+            user->isLoggedIn_ = true;
+            printf("You Logged in Successfully!\n");
+            return; 
         }
     }
+
+    // If we reach here, no match was found
+    printf("Invalid Username or Password\nNote: Username is firstname + lastname + ID without spaces\nPlease Try Again\n");
 }
+
+
+
+
 
 void register_user(User* user, UserDetails* ud)
 {
-    if(user->isRegistered_ == true)
-    {
-        printf("You are already registered!\nPlease proceed to login.\n");
-        return;
-    }
     //take inputs for all members of user
     //call initialize_user_reg
     ensure_capacity(ud);
-    ud->user_details[ud->users_count_] = *user;
+    //User *ud = &ud->user_details[ud->users_count_];
 
     read_firstname:
     printf("Please Enter Your First Name: ");
     getchar();
-    scanf("%[^\n]", user->first_name_);
-    if (!validname(user->first_name_)) //function call of validating name
+    scanf("%[^\n]", ud->user_details[ud->users_count_].first_name_);
+    if (!validname(ud->user_details[ud->users_count_].first_name_)) //function call of validating name
     {
         printf("Invalid name\nEnter only characters\n");
         goto read_firstname;//if the entered name does not pass function it prints invalid and calls goto function
@@ -183,8 +204,8 @@ void register_user(User* user, UserDetails* ud)
     read_lastname:
     printf("Please Enter Your Last Name: ");
     getchar();
-    scanf("%[^\n]", user->last_name_);
-    if (!validname(user->last_name_)) //function call of validating name
+    scanf("%[^\n]", ud->user_details[ud->users_count_].last_name_);
+    if (!validname(ud->user_details[ud->users_count_].last_name_)) //function call of validating name
     {
         printf("Invalid name\nEnter only characters\n");
         goto read_lastname;//if the entered name does not pass function it prints invalid and calls goto function
@@ -193,8 +214,8 @@ void register_user(User* user, UserDetails* ud)
     readphone:
     printf("Please Enter Your Mobile Number: ");
     getchar();
-    scanf("%[^\n]", user->number_);
-    if(!validphone(user->number_, ud->user_details))//function call of validating phone number
+    scanf("%[^\n]", ud->user_details[ud->users_count_].number_);
+    if(!validphone(ud->user_details[ud->users_count_].number_))//function call of validating phone number
     {
         printf("Invalid phone number\n");
         printf("Enter phone number(10 digits)\n");
@@ -204,27 +225,64 @@ void register_user(User* user, UserDetails* ud)
     reademail:
     printf("Please Enter Your Mail ID: ");
     getchar();
-    scanf("%[^\n]", user->email_);
-    if(!validemail(user->email_, ud->user_details)) //function call of validating email
+    scanf("%[^\n]", ud->user_details[ud->users_count_].email_);
+    if(!validemail(ud->user_details[ud->users_count_].email_)) //function call of validating email
     {
         printf("Invalid email_id\n");
         printf("Enter valid email_id\n");
         goto reademail;//if the entered email-id does not pass function it prints invalid and calls goto function
     }
-    strcat(user->username_,user->first_name_); 
-    strcat(user->username_,user->last_name_); 
-    char id[30] = "";
-    sprintf(id, "%d", user->ID_);
-    strcat(user->username_, id);
-    printf("New User Created\nYour Username is Firstname + Lastname + ID\nUsername:%s\n", user->username_);
+    strcat(ud->user_details[ud->users_count_].username_,ud->user_details[ud->users_count_].first_name_); 
+    strcat(ud->user_details[ud->users_count_].username_,ud->user_details[ud->users_count_].last_name_); 
+    ud->user_details[ud->users_count_].ID_ = ud->users_count_ + 1;
+    char id[30];
+    sprintf(id, "%d", ud->user_details[ud->users_count_].ID_);
+    strcat(ud->user_details[ud->users_count_].username_, id);
+
+    printf("New User Created\n\nYour Username is Firstname + Lastname + ID\n\nUsername:%s\n", ud->user_details[ud->users_count_].username_);
 
     printf("Please Choose Your Password: ");
     getchar();
-    scanf("%[^\n]", user->password_);
+    scanf("%[^\n]", ud->user_details[ud->users_count_].password_);
 
+    ud->user_details[ud->users_count_].isRegistered_ = true;
+    initialize_user_reg(user, 
+        ud->user_details[ud->users_count_].first_name_, 
+        ud->user_details[ud->users_count_].last_name_,  
+        ud->user_details[ud->users_count_].number_, 
+        ud->user_details[ud->users_count_].email_,
+        ud->user_details[ud->users_count_].username_, 
+        ud->user_details[ud->users_count_].password_);
     ud->users_count_++;
-    user->isRegistered_ = true;
-    save_user_file(ud);
+    save_user_file(ud); // Save user details to file
+    
+}
+
+
+void list_users(UserDetails *ud) //read from file instead of this
+{
+    if (ud->users_count_ == 0) 
+    {
+        printf("No Users Found\n");
+        return;
+    }
+    printf("------------------------------------------------------------------Users List-----------------------------------------------------------------\n");
+    printf("%-5s %-20s %-20s %-20s %-20s %-20s %-20s %-20s\n", 
+           "S.No", "Firstname", "Lastname", "Number", "Email ID", "Username", "Password", "Registration");
+    printf("---------------------------------------------------------------------------------------------------------------------------------------------\n");
+    for (int i = 0; i < ud->users_count_; i++) 
+    {
+        printf("%-5d %-20s %-20s %-20s %-20s %-20s %-20s %-20d\n",
+               i + 1,
+               ud->user_details[i].first_name_,
+               ud->user_details[i].last_name_,
+               ud->user_details[i].number_,
+               ud->user_details[i].email_,
+               ud->user_details[i].username_,
+               ud->user_details[i].password_,
+               ud->user_details[i].isRegistered_);
+    }
+    printf("---------------------------------------------------------------------------------------------------------------------------------------------\n");
 }
 
 
@@ -277,6 +335,17 @@ void select_seats(User* user, Movies* movie)//Select seats
     int tickets = 1;
     int result;
     char ch;
+    int user_max_tickets = 0;
+    int user_first_ticket = 0;
+    for(int i = 0; i < MAX_TICKETS_; i++)
+    {
+        if(user->tickets_[i].seat_.isEmpty_ == true)
+        {
+            i = user_first_ticket;
+            user_max_tickets = MAX_TICKETS_-i-1;
+            break;
+        }
+    }
     do {
         printf("Number of tickets: ");
         result = scanf("%d", &tickets);
@@ -285,7 +354,7 @@ void select_seats(User* user, Movies* movie)//Select seats
             printf("Seat selection terminated since 0 tickets selected.\n");
             return;
         }
-        if (result != 1 || tickets > MAX_TICKETS_ || tickets <= 0) {
+        if (result != 1 || tickets > user_max_tickets|| tickets <= 0) {
             printf("Invalid input. Please enter a valid number of tickets, max is 10 per person.\n");
             // Clear input buffer
             while ((ch = getchar()) != '\n' && ch != EOF);
@@ -334,27 +403,33 @@ void pay_for_seats(User* user)//Pay for seats
         printf("Please login first in order to pay!\n");
         return;
     }
-    int i = 0;
+    int user_first_ticket = 0;
     double cost = 0.0;
-    for(i = 0; i < MAX_TICKETS_; i++)
+    for(user_first_ticket = 0; user_first_ticket < MAX_TICKETS_; user_first_ticket++)
     {
-        if(!user->tickets_[i].isBooked_)
+        if(!user->tickets_[user_first_ticket].isBooked_)
         break;
-        printf("Ticket ID: %d",user->tickets_[i].ID_);
-        printf("Movie Name: %s",user->tickets_[i].movie_.movie_name);
-        printf("Ticket Price: %lf",user->tickets_[i].movie_.price);
-        cost+= user->tickets_[i].movie_.price;
-        user->tickets_[i].isBooked_ = true;
+        printf("Ticket ID: %d",user->tickets_[user_first_ticket].ID_);
+        printf("Movie Name: %s",user->tickets_[user_first_ticket].movie_.movie_name);
+        printf("Ticket Price: %lf",user->tickets_[user_first_ticket].movie_.price);
+        cost+= user->tickets_[user_first_ticket].movie_.price;
+        user->tickets_[user_first_ticket].isBooked_ = true;
     }
-    if(i == 0)
+    if(user_first_ticket == 0)
     {
-        printf("You haven't selected any seats yet! Please come back after selecting the seats.");
+        if(user->tickets_[user_first_ticket].seat_.isEmpty_ == true)
+        printf("You haven't selected any seats yet! Please come back after selecting the seats.\n");
         return;
     }
-
-    printf("Number of tickets being purchased: %d", i+1);
-    printf("Total Cost: %lf", cost);
-    printf("Please make the payment at the theater before your movie.\nThe ticket price is displayed on the ticket.");
+    int tickets = 0;
+    for(int i = user_first_ticket; i < MAX_TICKETS_; i++)
+    {
+        if(user->tickets_[user_first_ticket].seat_.isEmpty_ == false)
+        tickets++;
+    }
+    printf("Number of tickets being purchased: %d\n", tickets);
+    printf("Total Cost: %lf\n", cost);
+    printf("Please make the payment at the theater before your movie.\nThe ticket price is displayed on the ticket.\n");
     printf("Thank you for your purchase!\nWe wish you a great time at the cinemas :)\n");
 }
 
@@ -466,11 +541,30 @@ void edit_credentials(User* user)
             switch(option)
             {
                 case(1):
-               //first name
+                //first name
+                read_ref_name:
+                printf("Enter your Firstname(Current: %s): ", user->first_name_);
+                getchar();
+                scanf("%[^\n]", user->first_name_);
+                if(!validname(user->first_name_)) //function call of validating name
+                {
+                    printf("Invalid name\nEnter only characters\n");
+                    goto read_ref_name; // if invalid, continue to re-enter
+                }
                 printf("First name successfully changed to %s .\n",user->first_name_);
                 break;
                 case(2):
                 //last name
+                read_rel_name:
+                printf("Enter your Lastname(Current: %s): ", user->last_name_);
+                getchar();
+                scanf("%[^\n]", user->last_name_);
+                if(!validname(user->last_name_)) //function call of validating name
+                {
+                    printf("Invalid name\nEnter only characters\n");
+                    goto read_ref_name;; // if invalid, continue to re-enter
+                }
+
                 printf("Last name successfully changed to %s .\n",user->last_name_);
                 break;
                 case(3):
@@ -500,28 +594,3 @@ void edit_credentials(User* user)
         } while (result != 1);
 }
 
-void list_users(UserDetails *ud) 
-{
-    if (ud->users_count_ == 0) 
-    {
-        printf("No Users Found\n");
-        return;
-    }
-    printf("------------------------------------------------------------------Users List-----------------------------------------------------------------\n");
-    printf("%-5s %-20s %-20s %-20s %-20s %-20s %-20s %-20s\n", 
-           "S.No", "Firstname", "Lastname", "Number", "Email ID", "Username", "Password", "Registration");
-    printf("---------------------------------------------------------------------------------------------------------------------------------------------\n");
-    for (int i = 0; i < ud->users_count_; i++) 
-    {
-        printf("%-5d %-20s %-20s %-20s %-20s %-20s %-20s %-20d\n",
-               i + 1,
-               ud->user_details[i].first_name_,
-               ud->user_details[i].last_name_,
-               ud->user_details[i].number_,
-               ud->user_details[i].email_,
-               ud->user_details[i].username_,
-               ud->user_details[i].password_,
-               ud->user_details[i].isRegistered_);
-    }
-    printf("---------------------------------------------------------------------------------------------------------------------------------------------\n");
-}

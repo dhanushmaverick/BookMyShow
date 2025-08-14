@@ -22,7 +22,7 @@ int validname(char *p)
         return 0;//else returning 0
     }
 }
-int validemail(char* email, User *user)
+int validemail(char* email)
 {
     char* at = strchr(email, '@');//intilizing  @ and .com
     char* dot = strstr(email, ".com");
@@ -40,7 +40,7 @@ int validemail(char* email, User *user)
 }
 
 
-int validphone(char *phone, User *user)
+int validphone(char *phone)
 {
     if (phone == NULL || strlen(phone) != 10) return 0;
 
@@ -62,11 +62,11 @@ int validphone(char *phone, User *user)
 //     //exit(EXIT_SUCCESS); // Exit the program
 // }
 
-// void initialize_users_start(User *user)
-// {
-//     user->ID_ = 0;
-//     load_from_userfile(user);
-// }
+void initialize_users_start(UserDetails *user)
+{
+    user->user_details->ID_ = 0;
+    load_from_userfile(user);
+}
 
 
 void load_from_userfile(UserDetails *user)
@@ -109,6 +109,7 @@ void save_user_file(UserDetails *user)
                 user->user_details[i].email_,user->user_details[i].username_,user->user_details[i].password_);
     }
     fclose(fptr);
+    
     printf("User data saved successfully.\n");
 }
 

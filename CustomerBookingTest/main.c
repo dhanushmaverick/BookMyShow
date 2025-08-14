@@ -13,7 +13,7 @@ int main()
     UserDetails ud;
     //booking_tickets.movies_count = 0;
     initialize(&booking_tickets); // Initializing the file to load at the start
-    //initialize_users_start(&users);
+    init_user_details(&ud);
     
     bool status = false;
     int choice;

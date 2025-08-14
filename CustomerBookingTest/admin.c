@@ -10,7 +10,7 @@
 bool admin(Booking_tickets *Book, UserDetails *ud)
 {
     //system("cls");
-    init_user_details(ud);
+   // init_user_details(ud);
     int choice;
     do
     {

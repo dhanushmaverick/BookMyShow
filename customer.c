@@ -157,6 +157,7 @@ void login_user(User* user, UserDetails* ud)
            
             printf("You Logged in Successfully!\n");
             user->isLoggedIn_ = true;
+            ud->user_details[i].isLoggedIn_ = true;
             return; 
         }
     }
