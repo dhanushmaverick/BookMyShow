@@ -343,14 +343,6 @@ void select_seats(User* user, Movies* movie)//Select seats
     {
         if (user->tickets_[i].seat_.isEmpty_ == true)
         continue;
-        // for(int j = 0; j < MAX_SEATS_; j++)
-        // {
-        //     if(movie->seats_[j].number_ == user->tickets_[i].seat_.number_)//&& movie->seats_[j].number_ != 0)
-        //     {
-        //         initialize_seat(&movie->seats_[j]);
-        //         initialize_ticket(&user->tickets_[i], false);
-        //     }
-        // }
          int seat_no = user->tickets_[i].seat_.number_;
             if(seat_no > 0 && seat_no <= MAX_SEATS_)
             {
@@ -462,17 +454,24 @@ void pay_for_seats(User* user, Booking_tickets* booking_tickets, int movie_index
         return;
     }
     int tickets = 0;
+    printf("------------------------------------Booked Tickets------------------------------------\n");
+    printf("%-20s %-20s %-20s %-20s\n", "Ticket ID", "Movie Name", "Movie Price", "Seat Number");
     for(int i = user_first_ticket; i < MAX_TICKETS_; i++)
     {
         if(user->tickets_[i].seat_.isEmpty_ == false && user->tickets_[i].seat_.number_ != 0)
         {
             tickets++;
-            printf("Ticket ID: %d\n",user->tickets_[i].ID_);
-            printf("Movie Name: %s\n",user->tickets_[i].movie_.movie_name);
-            printf("Ticket Price: %lf\n",user->tickets_[i].movie_.price);
+            printf("%-20d %-20s %-20.2lf",
+                   user->tickets_[i].ID_, 
+                   user->tickets_[i].movie_.movie_name, 
+                   user->tickets_[i].movie_.price);
+            // printf("Ticket ID: %d\n",user->tickets_[i].ID_);
+            // printf("Movie Name: %s\n",user->tickets_[i].movie_.movie_name);
+            // printf("Ticket Price: %lf\n",user->tickets_[i].movie_.price);
             cost+= user->tickets_[i].movie_.price;
             user->tickets_[i].isBooked_ = true;
-            printf("Seat Number: %d\n", user->tickets_[i].seat_.number_);
+            printf("%-20d\n", user->tickets_[i].seat_.number_);
+            //printf("Seat Number: %d\n", user->tickets_[i].seat_.number_);
 
             // --- Update the main Booking_tickets seats array ---
             int seat_no = user->tickets_[i].seat_.number_;
@@ -482,8 +481,12 @@ void pay_for_seats(User* user, Booking_tickets* booking_tickets, int movie_index
         else
         break;
     }
-    printf("Number of tickets being purchased: %d\n", tickets);
-    printf("Total Cost: %lf\n", cost);
+    printf("--------------------------------------------------------------------\n");
+    printf("%-20s %-20s\n", "No.of Tickets", "Total Cost");
+
+    printf("%-20d---->%-20.2lf\n", tickets, cost);
+    // printf("Number of tickets being purchased: %d\n", tickets);
+    // printf("Total Cost: %lf\n", cost);
     printf("Tickets successfully booked!\nPlease make the payment at the theater before your movie.\nThe ticket price is displayed on the ticket.\n");
     printf("Thank you for your purchase!\nWe wish you a great time at the cinemas :)\n");
 

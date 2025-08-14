@@ -56,6 +56,19 @@ int main()
             if(status != 1)
             return 0;
             else
+            printf("Enter the Admin Password: ");
+            char password[50];
+            scanf("%s", password);
+            if(strcmp(password, "BookMyShow") != 0)
+            {
+                printf("Incorrect Password! Exiting...\n");
+                return 0;
+            }
+            else
+            {
+                printf("Password Correct!\n");
+                printf("Welcome Admin!\n");
+            }
             status = admin(&booking_tickets, &ud);
             if(status != 1)
             return 0;

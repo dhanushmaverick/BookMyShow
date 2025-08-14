@@ -259,10 +259,11 @@ void list_movies(Booking_tickets * book)
     } 
     else 
     {
-        printf("----------------------------Movie List---------------------------\n");
+        printf("-----------------------------------------------------Movie List----------------------------------------------------\n");
         //if movie count is not zero then it prints movies
-        printf("%-5s %-30s %-15s %-10s %-10s %-15s %-15s\n", "S.No", "Movie Name", "Time", "Price", "Total Seats", "Booked Seats", "Booked Seat Numbers");
-        printf("-----------------------------------------------------------------\n");
+        printf("%-5s %-30s %-15s %-10s %-12s %-13s %-20s\n", "S.No", "Movie Name", "Time", "Price",
+                                                             "Total Seats", "Booked Seats", "Booked Seat Numbers");
+        printf("-------------------------------------------------------------------------------------------------------------------\n");
         for (int i = 0; i < book->movies_count; i++) 
         {
             int booked_seats_count = 0;
@@ -270,7 +271,7 @@ void list_movies(Booking_tickets * book)
             printf(" %-30s", book->booking_movie[i].movie_name);
             printf(" %-15s", book->booking_movie[i].movie_time);
             printf(" %-10.2lf", book->booking_movie[i].price);
-            printf(" %-10d", MAX_SEATS_);
+            printf(" %-12d", MAX_SEATS_);
             for(int j = 0; j < MAX_SEATS_; j++)
             {
                 if(book->booking_movie[i].seats_[j].isEmpty_ == false)
@@ -278,19 +279,19 @@ void list_movies(Booking_tickets * book)
                     booked_seats_count++;
                 }
             }
-            printf(" %-15d", booked_seats_count);
+            printf(" %-13d", booked_seats_count);
             
             for(int j = 0; j < MAX_SEATS_; j++)
             {
                 if(book->booking_movie[i].seats_[j].isEmpty_ == false)
                 {
-                    printf(" %-15d ", book->booking_movie[i].seats_[j].number_);
+                    printf("%-d, ", book->booking_movie[i].seats_[j].number_);
                 }
             }
             
             printf("\n");
         }
-        printf("-----------------------------------------------------------------\n");
+        printf("--------------------------------------------------------------------------------------------------------------------\n");
     }
 }
 
