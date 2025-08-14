@@ -127,3 +127,28 @@ void ensure_capacity(UserDetails *user)
         user->user_details = temp;
     }
 }
+
+void forgot_password(UserDetails* ud) 
+{
+    char input[100];
+    int found = 0;
+    printf("Forgot Password\n");
+    printf("Enter your registered Email or Mobile Number: ");
+    getchar();
+    scanf("%[^\n]", input);
+
+    for (int i = 0; i < ud->users_count_; i++) {
+        if (strcmp(ud->user_details[i].email_, input) == 0 || strcmp(ud->user_details[i].number_, input) == 0) 
+        {
+            printf("Account found!\n");
+            printf("Username: %s\n", ud->user_details[i].username_);
+            printf("Password: %s\n", ud->user_details[i].password_);
+            found = 1;
+            break;
+        }
+    }
+    if (!found) 
+    {
+        printf("No account found with the provided Email or Mobile Number.\n");
+    }
+}

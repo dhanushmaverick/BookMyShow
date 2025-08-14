@@ -51,6 +51,7 @@ void load_from_userfile(UserDetails *ud);//loading users to file function defini
 void ensure_capacity(UserDetails *ud);
 void init_user_details(UserDetails *ud);//
 void list_users(UserDetails *ud);
+void forgot_password(UserDetails* ud);
 
 //View available movies
 void book_tickets(User* user, Booking_tickets* booking_tickets);//Book tickets

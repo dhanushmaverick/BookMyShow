@@ -83,8 +83,9 @@ bool customer(Booking_tickets* booking_tickets, UserDetails* ud)
         printf("4. Book Tickets\n");
         printf("5. View Booked Tickets\n");
         printf("6. View/Edit User Credentials\n");
-        printf("7. Exit Program\n"); //return false
-       // printf("8. Exit to Admin Version\n"); //return true //make secret
+        printf("7. Forgot Password\n");
+        printf("8. Exit Program\n"); //return false
+       // printf("9. Exit to Admin Version\n"); //return true //make secret
         printf("Enter your choice: ");//entering the choice
         scanf("%d", &choice);//reading the choice from the user
 
@@ -112,17 +113,20 @@ bool customer(Booking_tickets* booking_tickets, UserDetails* ud)
             edit_credentials(ud,&user);
             break;
             case 7:
+            forgot_password(ud);
+            break;
+            case 8:
             printf("Thank you for using BookMyShow!\n");
             printf("Goodbye and see you again!\n"); 
             return 0;
             break;
-            case 8:
+            case 9:
             return 1; // secret input, for admins to access admin view
             default:
             printf("Invalid choice. Please try again.\n");
         }
     } 
-    while (choice != 7);
+    while (choice != 8);
 
 }
 

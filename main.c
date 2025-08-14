@@ -23,6 +23,19 @@ int main()
     switch(choice) 
     {
         case 1:
+        printf("Enter the Admin Password: ");
+        char password[50];
+        scanf("%s", password);
+        if(strcmp(password, "BookMyShow") != 0)
+        {
+            printf("Incorrect Password! Exiting...\n");
+            return 0;
+        }
+        else
+        {
+            printf("Password Correct!\n");
+            printf("Welcome Admin!\n");
+        }
         printf("You Accessed As Admin\n");
         do
         {
