@@ -14,8 +14,11 @@ Project using C in order to gain practice while trying to replicate BookMyShow's
 7. users csv must save details
 
 Dhanush Tasks:
--debug payment post selection
--debug and test tickets
+
 
 **DONE**
 -fix login logic 
+-debug payment post selection
+-debug and test tickets
+-view selected seats
+-view tickets

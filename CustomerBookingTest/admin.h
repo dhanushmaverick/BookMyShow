@@ -46,5 +46,6 @@ void initialize(Booking_tickets *Book); //intilizing the file to load from the f
 void valid_price(Booking_tickets *Book, int index);
 
 void initialize_seat(Seat* seat);
+void initialize_ticket_seat(Seat* seat);
 
 #endif

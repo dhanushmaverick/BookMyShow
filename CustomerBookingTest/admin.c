@@ -301,6 +301,11 @@ void initialize_seat(Seat* seat)
     seat->number_ = count++;
     seat->isEmpty_ = true;
 }
+void initialize_ticket_seat(Seat* seat)
+{
+    seat->number_ = 0;
+    seat->isEmpty_ = true;
+}
 
 void save_movie_file(Booking_tickets *Book) //save to file definition
 {

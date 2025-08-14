@@ -58,6 +58,7 @@ void view_seats(Movies* movie);//View seats
 void select_seats(User* user, Movies* movie);//Select seats
 void pay_for_seats(User* user);//Pay for seats
 void view_ticket(Ticket* ticket);//View ticket
+void view_booked_tickets(User* user);
 void select_movie(User* user,Booking_tickets* booking_tickets, int* movie);
 void edit_credentials(User* user);
 
